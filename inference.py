@@ -5,8 +5,11 @@ from matplotlib import pyplot as plt
 from typing import List
 import os
 import json
-import viz_utils
-from etiltWav import etiltWav
+import sys
+sys.path.append((os.path.dirname(os.path.dirname(__file__))))
+
+import faursound_core.viz_utils as viz_utils
+from faursound_core.etiltWav import etiltWav
 import base64
 
 

@@ -1,5 +1,7 @@
 import pytest, os, pandas as pd
-from criticalLevel import criticalLevel
+import sys
+sys.path.append((os.path.dirname(os.path.dirname(__file__))))
+from faursound_core.criticalLevel import criticalLevel
 
 output_folder = r'./test'
 label = 'blocking'

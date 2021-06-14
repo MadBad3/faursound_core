@@ -1,5 +1,7 @@
 import pytest, librosa, os, shutil, numpy as np
-from _wavNVH import _wavNVH
+import sys
+sys.path.append((os.path.dirname(os.path.dirname(__file__))))
+from faursound_core._wavNVH import _wavNVH
 from mock import patch
 
 filepath_wav = r'./test/E-Tilt_6202-PC1_2402749_20210201_052216_11ACF9023_750N - Up.wav'

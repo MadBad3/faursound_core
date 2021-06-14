@@ -3,7 +3,10 @@ import numpy as np
 import os
 from openpyxl import load_workbook
 import json
-from criticalLevel import criticalLevel
+import sys
+sys.path.append((os.path.dirname(os.path.dirname(__file__))))
+
+from faursound_core.criticalLevel import criticalLevel
 
 # this class take prediction result (txt file) and original picture, calculation critical level and export xls for NVH expert analysis
 

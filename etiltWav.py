@@ -1,8 +1,11 @@
-from _wavNVH import _wavNVH
+import os
+import sys
+sys.path.append((os.path.dirname(os.path.dirname(__file__))))
+
+from faursound_core._wavNVH import _wavNVH
 import re
 import numpy as np
 import pandas as pd
-import os
 import cv2 as cv
 import matplotlib.pyplot as plt
 from matplotlib.ticker import ScalarFormatter
@@ -423,25 +426,25 @@ class etiltWav(_wavNVH):
 
 
 
-if __name__ == '__main__':
-    os.chdir(r'D:\Github\FaurSound')
+# if __name__ == '__main__':
+    # os.chdir(r'D:\Github\FaurSound')
 
-    to_label_metaData_path = r'./cleaned_csv/cleaned_csv_2021-02-01_TO_LABEL.csv'
-    df = pd.read_csv(to_label_metaData_path, header = 0)
-    output_folder = r'D:\Solid\temp'
+    # to_label_metaData_path = r'./cleaned_csv/cleaned_csv_2021-02-01_TO_LABEL.csv'
+    # df = pd.read_csv(to_label_metaData_path, header = 0)
+    # output_folder = r'D:\Solid\temp'
     
-    etiltWav.load_df_meta(df)
+    # etiltWav.load_df_meta(df)
 
-    test_wav = r'data\from_e-tilt_noise_list_ppt\wav\60-over_running-shocks.wav'
+    # test_wav = r'data\from_e-tilt_noise_list_ppt\wav\60-over_running-shocks.wav'
 
-    obj = etiltWav(test_wav, n_fft=512, hop_length=128,get_infor_from_fn = False)
-    obj.cut_wav_in_second(left_cut=0.75, right_cut=0.75)
+    # obj = etiltWav(test_wav, n_fft=512, hop_length=128,get_infor_from_fn = False)
+    # obj.cut_wav_in_second(left_cut=0.75, right_cut=0.75)
 
-    cv_output_folder = os.path.join(output_folder,'cv')
-    obj.stft_custom_spec_to_pic(output_folder=output_folder)
-    obj.save_stft_cv_pic(output_folder=cv_output_folder)
+    # cv_output_folder = os.path.join(output_folder,'cv')
+    # obj.stft_custom_spec_to_pic(output_folder=output_folder)
+    # obj.save_stft_cv_pic(output_folder=cv_output_folder)
 
-    print(obj.df_meta.head(5))
+    # print(obj.df_meta.head(5))
     # print(obj.label)
 
 

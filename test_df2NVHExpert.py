@@ -1,7 +1,10 @@
-from df2NVHExpert import df2NVHExpert
+import sys
+from faursound_core.df2NVHExpert import df2NVHExpert
 import pytest, os, sys, pandas as pd
+sys.path.append((os.path.dirname(os.path.dirname(__file__))))
+
 from openpyxl import load_workbook
-from etiltWav import etiltWav
+from faursound_core.etiltWav import etiltWav
 
 path2stft = r'./test'
 path2prediction = r'./test/text'
