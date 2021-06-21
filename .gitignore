@@ -5,10 +5,16 @@ __pycache__/
 
 # C extensions
 *.so
+*.jpg
+*.wav
+*.ipynb
+*.png
 
 # Distribution / packaging
 .Python
 .vscode
+credential/
+gcp_app_flex_engine/credential/
 build/
 develop-eggs/
 dist/
