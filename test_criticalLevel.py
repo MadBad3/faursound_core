@@ -9,13 +9,14 @@ x1 = float(1)
 y1 = float(250)
 x2 = float(50)
 y2 = float(300)
+score = float(0.8)
 window_size = 5
 step = 1
 
 def test_run():
 	cl = criticalLevel()
 	stft_pic_path = os.path.join(output_folder+'/E-Tilt_6202-PC1_2402749_20210201_052215_11ACF9023_750N - Down.jpg')
-	output = cl.run(stft_pic_path, x1,y1,x2,y2, label)
+	output = cl.run(stft_pic_path, x1,y1,x2,y2,score, label)
 	assert type(output) == int
 
 def test_read_pic_and_box_to_array():
@@ -28,11 +29,11 @@ def test_calculate_critical_level():
 	stft_pic_path = os.path.join(output_folder+'/E-Tilt_6202-PC1_2402749_20210201_052215_11ACF9023_750N - Down.jpg')
 	cl = criticalLevel()
 	cutted_img = cl._read_pic_and_box_to_array(stft_pic_path, x1,y1,x2,y2)
-	output = cl.calculate_critical_level(label, cutted_img)
+	output = cl.calculate_critical_level(label, score, cutted_img)
 	assert type(output) == int
 
 	with pytest.raises(ValueError, match=r'label is not inside of pre-defined list for CL calculation'):
-		cl.calculate_critical_level('label', cutted_img)
+		cl.calculate_critical_level('label',score, cutted_img)
 
 def test_calcul_cl_blocking():
 	stft_pic_path = os.path.join(output_folder+'/E-Tilt_6202-PC1_2402749_20210201_052215_11ACF9023_750N - Down.jpg')
@@ -126,7 +127,7 @@ def test_calcul_cl_spike():
 	stft_pic_path = os.path.join(output_folder+'/E-Tilt_6202-PC1_2402749_20210201_052215_11ACF9023_750N - Down.jpg')
 	cl = criticalLevel()
 	cutted_img = cl._read_pic_and_box_to_array(stft_pic_path, x1,y1,x2,y2)
-	output = cl._calcul_cl_spike(cutted_img)
+	output = cl._calcul_cl_spike(cutted_img,score)
 	assert type(output) == int
 
 def test_calcul_cl_bench():
