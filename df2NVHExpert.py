@@ -84,7 +84,8 @@ class df2NVHExpert(object):
             for idx in range(num_of_object_output):
                 infor = df.iloc[idx].item().split(',')
                 infor[-1] = self.category_index[int(infor[-1]) + label_offset]['name'] #infor[-1] is where label stores, then we decoded it to label name
-                cl_value = cl.run(stft_file_path,x1=infor[0],y1=infor[1],x2=infor[2],y2=infor[3],label=infor[5])
+                cl_value = cl.run(stft_file_path,x1=infor[0],y1=infor[1],x2=infor[2],y2=infor[3],
+                                score=infor[4],label=infor[5])
                 series = pd.Series(data = {
                             'object_id':f"{idx:02d}",
                             'score':round(float(infor[4]),2),

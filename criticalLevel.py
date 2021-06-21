@@ -16,7 +16,7 @@ class criticalLevel(object):
     def __init__(self):
         self.num_spike = count(1)
 
-    def run(self,stft_pic_path:str, x1:float,y1:float,x2:float,y2:float, label:str) -> int:
+    def run(self,stft_pic_path:str, x1:float,y1:float,x2:float,y2:float,score:float, label:str) -> int:
         """run critical level calculation
 
         :param stft_pic_path: [stft picture path]
@@ -39,9 +39,10 @@ class criticalLevel(object):
         y1 = float(y1)
         x2 = float(x2)
         y2 = float(y2)
+        score = float(score)
 
         cutted_img = self._read_pic_and_box_to_array(stft_pic_path, x1,y1,x2,y2)
-        output = self.calculate_critical_level(label = label, cutted_img = cutted_img)
+        output = self.calculate_critical_level(label = label, score=score, cutted_img = cutted_img)
         return output
 
 
@@ -59,7 +60,7 @@ class criticalLevel(object):
         return df
 
 
-    def calculate_critical_level(self, label:str, cutted_img:np.ndarray):
+    def calculate_critical_level(self, label:str, score:float, cutted_img:np.ndarray):
         if label == 'blocking':
             output = self._calcul_cl_blocking(cutted_img)
 
@@ -88,7 +89,7 @@ class criticalLevel(object):
             output = self._calcul_cl_scratching(cutted_img)
             
         elif label == 'spike':
-            output = self._calcul_cl_spike(cutted_img)
+            output = self._calcul_cl_spike(cutted_img=cutted_img,score=score)
             
         elif label == 'bench':
             output = self._calcul_cl_bench(cutted_img)
@@ -112,7 +113,7 @@ class criticalLevel(object):
 
             
     def _calcul_cl_blocking(self,cutted_img:np.ndarray) -> int:
-        """critical lever calculation for blocking
+        """critical level calculation for blocking
         #? increase range * ampitude
 
         :param cutted_img: [cutted image array from bounding box]
@@ -126,7 +127,7 @@ class criticalLevel(object):
         return int(increase_range * amp / 100)              
 
     def _calcul_cl_pain(self,cutted_img:np.ndarray) -> int:
-        """critical lever calculation for pain
+        """critical level calculation for pain
         #? decrease range * ampitude
 
         :param cutted_img: [cutted image array from bounding box]
@@ -140,7 +141,7 @@ class criticalLevel(object):
         return int(decrease_range * amp / 100)             
 
     def _calcul_cl_hooting(self,cutted_img:np.ndarray) -> int:
-        """critical lever calculation for hooting
+        """critical level calculation for hooting
         #? mean_in_y_then_mean_in_x
 
         :param cutted_img: [cutted image array from bounding box]
@@ -151,7 +152,7 @@ class criticalLevel(object):
         return self._mean_in_y_then_mean_in_x(cutted_img)
 
     def _calcul_cl_modulation(self,cutted_img:np.ndarray) -> int:
-        """critical lever calculation for modulation
+        """critical level calculation for modulation
         #? mod_heigh * ampitude
         #? to be update ! y_max_pos should be smoothed
 
@@ -170,7 +171,7 @@ class criticalLevel(object):
         return int(mod_heigh * amp / 100)                    
 
     def _calcul_cl_grinding(self,cutted_img:np.ndarray) -> int:
-        """critical lever calculation for grinding
+        """critical level calculation for grinding
         #? to be checked
 
         :param cutted_img: [cutted image array from bounding box]
@@ -184,7 +185,7 @@ class criticalLevel(object):
         return int(rms)                     
 
     def _calcul_cl_over_running(self,cutted_img:np.ndarray) -> int:
-        """critical lever calculation for over running
+        """critical level calculation for over running
         #? width ?
 
         :param cutted_img: [cutted image array from bounding box]
@@ -196,7 +197,7 @@ class criticalLevel(object):
         return width                                  
 
     def _calcul_cl_tic(self,cutted_img:np.ndarray) -> int:
-        """critical lever calculation for tic
+        """critical level calculation for tic
         #? max_in_y_then_mean_in_x ?
 
         :param cutted_img: [cutted image array from bounding box]
@@ -207,7 +208,7 @@ class criticalLevel(object):
         return self._max_in_y_then_mean_in_x(cutted_img) 
 
     def _calcul_cl_knock(self,cutted_img:np.ndarray) -> int:
-        """critical lever calculation for knock
+        """critical level calculation for knock
         #? max_in_y_then_mean_in_x ?
 
         :param cutted_img: [cutted image array from bounding box]
@@ -218,7 +219,7 @@ class criticalLevel(object):
         return self._max_in_y_then_mean_in_x(cutted_img)
 
     def _calcul_cl_scratching(self,cutted_img:np.ndarray) -> int:
-        """critical lever calculation for scratching
+        """critical level calculation for scratching
         #? high_amp_values's mean
 
         :param cutted_img: [cutted image array from bounding box]
@@ -230,20 +231,26 @@ class criticalLevel(object):
         high_amp_values = max_in_y[max_in_y > max_in_y.mean()]
         return int(high_amp_values.mean())             
 
-    def _calcul_cl_spike(self,cutted_img:np.ndarray) -> int:
-        """critical lever calculation for spike
-        #? spike's count
+    def _calcul_cl_spike(self,cutted_img:np.ndarray,score:float, score_limit:float = 0.7) -> int:
+        """critial level calculation for spike
+        #? return spike counts (of confident score bigger than 0.7)
 
         :param cutted_img: [cutted image array from bounding box]
         :type cutted_img: np.ndarray
+        :param score: [confident score for the detection]
+        :type score: float
+        :param score_limit: [limit value for score], defaults to 0.7
+        :type score_limit: float, optional
         :return: [calculated cl value]
-        :rtype: [int]
+        :rtype: int
         """
-        # return int(cutted_img.shape[1] * cutted_img.shape[0] / 100) # just spike's area
-        return next(self.num_spike)
+        if score > score_limit:
+            return next(self.num_spike)
+        else:
+            return self.num_spike
 
     def _calcul_cl_bench(self,cutted_img:np.ndarray) -> int:
-        """critical lever calculation for bench
+        """critical level calculation for bench
         #? 0 as not from product
 
         :param cutted_img: [cutted image array from bounding box]
@@ -254,7 +261,7 @@ class criticalLevel(object):
         return 1
     
     def _calcul_cl_measurement_issue(self,cutted_img:np.ndarray) -> int:
-        """critical lever calculation for measurement_issue
+        """critical level calculation for measurement_issue
         #? 0 as not from product
 
         :param cutted_img: [cutted image array from bounding box]
@@ -265,7 +272,7 @@ class criticalLevel(object):
         return 1
 
     def _calcul_cl_rattle_product(self,cutted_img:np.ndarray) -> int:
-        """critical lever calculation for rattle_product
+        """critical level calculation for rattle_product
         #? max_in_y_then_mean_in_x
 
         :param cutted_img: [cutted image array from bounding box]
@@ -276,7 +283,7 @@ class criticalLevel(object):
         return self._max_in_y_then_mean_in_x(cutted_img)
 
     def _calcul_cl_buzzing(self,cutted_img:np.ndarray) -> int:
-        """critical lever calculation for buzzing
+        """critical level calculation for buzzing
         #? max_in_y_then_mean_in_x
 
         :param cutted_img: [cutted image array from bounding box]
@@ -287,7 +294,7 @@ class criticalLevel(object):
         return self._max_in_y_then_mean_in_x(cutted_img)
 
     def _calcul_cl_vibration_machine(self,cutted_img:np.ndarray) -> int:
-        """critical lever calculation for vibration_machine
+        """critical level calculation for vibration_machine
         #? 0 as not from product
 
         :param cutted_img: [cutted image array from bounding box]
