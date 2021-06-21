@@ -10,8 +10,8 @@ import cv2
 from typing import List
 import os
 import sys
-sys.path.append((os.path.dirname(os.path.dirname(__file__))))
-from faursound_core._wavNVH import _wavNVH
+# sys.path.append((os.path.dirname(os.path.dirname(__file__))))
+from _wavNVH import _wavNVH
 
 # importing all scripts that will be needed to export your model and use it for inference
 from object_detection.utils import label_map_util

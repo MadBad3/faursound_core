@@ -5,9 +5,9 @@ import cv2 as cv
 from itertools import count
 import os
 import sys
-sys.path.append((os.path.dirname(os.path.dirname(__file__))))
+# sys.path.append((os.path.dirname(os.path.dirname(__file__))))
 
-from faursound_core.etiltWav import etiltWav
+from etiltWav import etiltWav
 from itertools import count
 
 

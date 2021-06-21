@@ -4,11 +4,11 @@ import json
 # from inferenceAPI import inferenceAPI
 import os
 import sys
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from faursound_core.inference import inference
+# sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from inference import inference
 from flask import Flask, request, Response, abort
 import time
-from faursound_core.df2NVHExpert import df2NVHExpert
+from df2NVHExpert import df2NVHExpert
 
 
 OUTPUT_PATH = r'./detections'   # path to output folder where images with detections are saved

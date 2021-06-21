@@ -6,10 +6,10 @@ from typing import List
 import os
 import json
 import sys
-sys.path.append((os.path.dirname(os.path.dirname(__file__))))
+# sys.path.append((os.path.dirname(os.path.dirname(__file__))))
 
-import faursound_core.viz_utils as viz_utils
-from faursound_core.etiltWav import etiltWav
+import viz_utils
+from etiltWav import etiltWav
 import base64
 
 

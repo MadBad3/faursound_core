@@ -1,7 +1,7 @@
 import pytest, os, pandas as pd, numpy as np, cv2 as cv
 import sys
-sys.path.append((os.path.dirname(os.path.dirname(__file__))))
-from faursound_core.etiltWav import etiltWav
+# sys.path.append((os.path.dirname(os.path.dirname(__file__))))
+from etiltWav import etiltWav
 from mock import patch, call
 
 n_fft = 512

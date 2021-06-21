@@ -1,9 +1,9 @@
 import pytest, os, shutil, numpy as np
 import sys
-sys.path.append((os.path.dirname(os.path.dirname(__file__))))
-from faursound_core.inference import inference
+# sys.path.append((os.path.dirname(os.path.dirname(__file__))))
+from inference import inference
 from mock import patch
-from faursound_core.etiltWav import etiltWav
+from etiltWav import etiltWav
 
 path = r'./test/folder'
 path2label_map_json = r'./test/label_map.json'
