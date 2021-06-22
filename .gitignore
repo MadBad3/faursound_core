@@ -14,6 +14,7 @@ __pycache__/
 .Python
 .vscode
 credential/
+test/csv_folder/
 gcp_app_flex_engine/credential/
 build/
 develop-eggs/
