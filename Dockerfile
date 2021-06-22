@@ -11,5 +11,5 @@ WORKDIR /app
 
 EXPOSE 8000
 
-CMD ["gunicorn","-b",":8000","app:app"]
+CMD ["gunicorn","-b",":8000","app:faursound_app()"]
 
