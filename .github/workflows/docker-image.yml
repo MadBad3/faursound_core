@@ -20,7 +20,7 @@ jobs:
       run: git lfs checkout
     
     — name: Docker meta
-      id: docker_meta
+      id: meta
       uses: crazy-max/ghaction-docker-meta@v2
       with:
         images: ${{ secrets.DOCKER_HUB_USERNAME }}/faursound
@@ -47,7 +47,7 @@ jobs:
         context: ./
         file: ./Dockerfile
         push: true
-        tags: ${{ steps.docker_meta.outputs.tags }}
+        tags: ${{ steps.meta.outputs.tags }}
 
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
