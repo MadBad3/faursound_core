@@ -25,7 +25,7 @@ def process_one_wav_folder(wav_folder):
 
 if __name__ == "__main__":
     wav_folder = r'D:\Github\FaurSound\data\01 fev\Waves'
-    all_sub_folders = [ name for name in os.listdir(wav_folder) if os.path.isdir(os.path.join(wav_folder, name)) ]
+    all_sub_folders = [ os.path.join(wav_folder,name) for name in os.listdir(wav_folder) if os.path.isdir(os.path.join(wav_folder, name)) ]
 
     for folder in all_sub_folders:
         process_one_wav_folder(folder)
