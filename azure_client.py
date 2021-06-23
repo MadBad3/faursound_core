@@ -61,7 +61,7 @@ class fsAzureStorage(object):
         self._upload_file(container_name = self.cv_pic_container, file_path=cv_pic_path, metadata = metadata)
         self._upload_file(container_name = self.txt_container, file_path=txt_path, metadata = metadata)
         self._upload_file(container_name = self.predict_pic_container, file_path=predict_pic_path, metadata = metadata)
-
+        print(f'upload files to Azure blob storage -> Done ')
 
     def list_blobs_in_container(self, container_name):
         #TODO , to think about the use of this function
