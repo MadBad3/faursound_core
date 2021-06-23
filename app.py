@@ -19,8 +19,8 @@ model_version = re.search(r'v\d.\d.?.?',model_path).group(0)
 inferenceAPI = inference(path2label_map_json = path2label_map_json, model_path = model_path)
 
 
-def faursound_app(inferenceAPI = inferenceAPI, model_version = model_version):
-    azureClient = fsAzureStorage(model_version = model_version)
+def faursound_app(inferenceAPI = inferenceAPI, model_version = model_version, testing = False):
+    azureClient = fsAzureStorage(model_version = model_version, testing = testing)
 
     OUTPUT_PATH = r'./detections'   # path to output folder where images with detections are saved
 

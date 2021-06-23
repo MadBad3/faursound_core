@@ -7,10 +7,14 @@ from datetime import datetime
 
 class fsAzureStorage(object):
 
-    def __init__(self, model_version:str) -> None:
+    def __init__(self, model_version:str, testing = False) -> None:
         #! model_version have to follow naming rule : 'v1-4-0'
         cfg = ConfigParser()
-        cfg.read('config.ini')
+        if testing:
+            cfg.read('test/config.ini')
+        else:
+            cfg.read('config.ini')
+            
         AZURE_KEY = cfg['DEFAULT']['AZURE_KEY']
 
         os.environ['AZURE_STORAGE_CONNECTION_STRING'] = AZURE_KEY
