@@ -6,6 +6,7 @@ import os
 import re
 from inference import inference
 from flask import Flask, request, Response, abort
+import flask_monitoringdashboard as dashboard
 import time
 from df2NVHExpert import df2NVHExpert
 from datetime import datetime
@@ -25,6 +26,8 @@ def faursound_app(inferenceAPI = inferenceAPI, model_version = model_version, te
     OUTPUT_PATH = r'./detections'   # path to output folder where images with detections are saved
 
     app = Flask(__name__)
+    dashboard.config.init_from(file=r'./dashboard_config.cfg')
+    dashboard.bind(app)
 
     # API that returns JSON with classes found in images
     @app.route('/raw', methods=['POST'])
