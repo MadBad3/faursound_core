@@ -12,6 +12,7 @@ __pycache__/
 *.ipynb
 *.png
 *.xlsx
+*.wav
 stft/
 cv/
 detections/
