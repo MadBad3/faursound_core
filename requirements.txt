@@ -9,3 +9,4 @@ google_api_python_client
 openpyxl
 pytest
 mock
+azure-storage-blob

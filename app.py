@@ -3,22 +3,25 @@ import cv2
 import json
 # from inferenceAPI import inferenceAPI
 import os
-import sys
-# sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+import re
 from inference import inference
 from flask import Flask, request, Response, abort
 import time
 from df2NVHExpert import df2NVHExpert
-
+from datetime import datetime
+from azure_client import fsAzureStorage
 
 path2label_map_json = r'./label_map.json' 
 
 model_path = r'./FaurSound_model/saved_model_image_input_v1-4'
+model_version = re.search(r'v\d.\d.?.?',model_path).group(0)
 
 inferenceAPI = inference(path2label_map_json = path2label_map_json, model_path = model_path)
 
 
-def faursound_app(inferenceAPI = inferenceAPI):
+def faursound_app(inferenceAPI = inferenceAPI, model_version = model_version):
+    azureClient = fsAzureStorage(model_version = model_version)
+
     OUTPUT_PATH = r'./detections'   # path to output folder where images with detections are saved
 
     app = Flask(__name__)
@@ -67,6 +70,7 @@ def faursound_app(inferenceAPI = inferenceAPI):
 
     @app.route('/EOL', methods=['POST'])
     def inference_with_EOL_output():
+
         t1 = time.time()
         wav_file = request.files["wav"]
         wav_name = wav_file.filename
@@ -87,8 +91,13 @@ def faursound_app(inferenceAPI = inferenceAPI):
         print('save stft/cv file time: {}'.format(t3 - t2))
 
         img = inferenceAPI.inference_one_img_with_plot_on_stft(cv_file_path,stft_file_path,
-                                                    save_png_folder=OUTPUT_PATH,save_txt=False)
+                                                    save_png_folder=OUTPUT_PATH,save_txt=True)
         
+        predict_pic_fp = os.path.join(OUTPUT_PATH, f'{title}.png')
+
+        txt_dir_path=os.path.join(os.path.dirname(cv_file_path),'prediction_txt_raw_output')
+        txt_file_path = os.path.join(txt_dir_path, f'{title}.txt')
+
         t4 = time.time()
         print('inferenceAPI time: {}'.format(t4 - t3))
 
@@ -97,10 +106,13 @@ def faursound_app(inferenceAPI = inferenceAPI):
         _, img_encoded = cv2.imencode('.png', im_BGR)
         response = img_encoded.tostring()
 
-        #remove temporary image
+        azureClient.upload_to_azure(cv_file_path,txt_file_path,predict_pic_fp)
+        #remove temporary files
         os.remove(wav_file_path)
         os.remove(cv_file_path)
         os.remove(stft_file_path)
+        os.remove(predict_pic_fp)
+        os.remove(txt_file_path)
         t5 = time.time()
         print('prepare output time: {}'.format(t5 - t4))
 
@@ -153,6 +165,7 @@ def faursound_app(inferenceAPI = inferenceAPI):
         faursound_api_github = r'https://github.com/WangCHEN9/faursound_core'
         response = f'Hello, see how to use this API in {faursound_api_github} !'
         return response
+
     
     return app
         
