@@ -10,17 +10,12 @@ class fsAzureStorage(object):
     def __init__(self, model_version:str, testing = False) -> None:
         #! model_version have to follow naming rule : 'v1-4-0'
         cfg = ConfigParser()
-        if testing:
-            cfg.read('test/config.ini')
-        else:
+        if not testing:
             cfg.read('config.ini')
-            
-        AZURE_KEY = cfg['DEFAULT']['AZURE_KEY']
-
-        os.environ['AZURE_STORAGE_CONNECTION_STRING'] = AZURE_KEY
-        connect_str = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
-
-        self.blob_service_client = BlobServiceClient.from_connection_string(connect_str)
+            AZURE_KEY = cfg['DEFAULT']['AZURE_KEY']
+            os.environ['AZURE_STORAGE_CONNECTION_STRING'] = AZURE_KEY
+            connect_str = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
+            self.blob_service_client = BlobServiceClient.from_connection_string(connect_str)
 
         self.model_version = model_version
         self.date = datetime.utcnow().strftime('%d%m%Y')
