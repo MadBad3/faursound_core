@@ -2,7 +2,7 @@ import requests
 import os
 import progressbar
 
-URL = 'http://192.168.1.47:5000/EOL'
+URL = 'http://localhost:5000/EOL'
 
 def inference_wav(file_path, url = URL):
     files = {'wav': open(file_path, 'rb')}

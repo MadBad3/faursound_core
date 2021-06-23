@@ -78,10 +78,10 @@ def faursound_app(inferenceAPI = inferenceAPI, model_version = model_version, te
         cwd_path = os.getcwd()
         wav_file_path = os.path.join(cwd_path, wav_name)
         wav_file.save(wav_file_path)
+        wav_file.close()
 
         t2 = time.time()
         print('save wav file time: {}'.format(t2 - t1))
-
 
         inferenceAPI.get_spec_pics_for_wav(wav_file_path,output_folder=cwd_path , get_infor_from_fn=True)
         cv_file_path = os.path.join(cwd_path,'cv',f'{title}.jpg')
@@ -114,7 +114,8 @@ def faursound_app(inferenceAPI = inferenceAPI, model_version = model_version, te
         os.remove(predict_pic_fp)
         os.remove(txt_file_path)
         t5 = time.time()
-        print('prepare output time: {}'.format(t5 - t4))
+        print('prepare output and upload to Azure time: {}'.format(t5 - t4))
+        print('TOTAL time: {}'.format(t5 - t1))
 
         try:
             return Response(response=response, status=200, mimetype='image/png')
@@ -130,6 +131,7 @@ def faursound_app(inferenceAPI = inferenceAPI, model_version = model_version, te
         cwd_path = os.getcwd()
         wav_file_path = os.path.join(cwd_path, wav_name)
         wav_file.save(wav_file_path)
+        wav_file.close()
 
         inferenceAPI.get_spec_pics_for_wav(wav_file_path,output_folder=cwd_path , get_infor_from_fn=True)
         cv_file_path = os.path.join(cwd_path,'cv',f'{title}.jpg')
@@ -171,4 +173,4 @@ def faursound_app(inferenceAPI = inferenceAPI, model_version = model_version, te
         
 if __name__ == '__main__':
     app = faursound_app()
-    app.run(debug=True, host = '0.0.0.0', port=5000)
+    app.run(debug=False, host = '0.0.0.0', port=5000)

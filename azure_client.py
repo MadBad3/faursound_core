@@ -11,7 +11,7 @@ class fsAzureStorage(object):
         #! model_version have to follow naming rule : 'v1-4-0'
         cfg = ConfigParser()
         if not testing:
-            cfg.read('config.ini')
+            cfg.read(r'./secret/config.ini')
             AZURE_KEY = cfg['DEFAULT']['AZURE_KEY']
             os.environ['AZURE_STORAGE_CONNECTION_STRING'] = AZURE_KEY
             connect_str = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
