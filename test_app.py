@@ -3,7 +3,7 @@ from app import faursound_app
 
 @pytest.fixture
 def client():
-    app = faursound_app()
+    app = faursound_app(testing = True)
     app.config['TESTING'] = True
 
     with app.app_context():
