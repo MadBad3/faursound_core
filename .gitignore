@@ -12,6 +12,9 @@ __pycache__/
 *.ipynb
 *.png
 *.xlsx
+stft/
+cv/
+detections/
 credential/
 gcp_app_flex_engine/credential/
 config.ini
