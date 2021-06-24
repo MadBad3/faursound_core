@@ -5,6 +5,7 @@ import cv2 as cv
 import matplotlib.pyplot as plt
 from matplotlib.ticker import ScalarFormatter
 import re
+import time
 
 class etiltEOL(_wavEOL):
     """class to deal with etilt wav file, including preprocess needed for spec pics.
@@ -81,6 +82,7 @@ class etiltEOL(_wavEOL):
         :return: [save path for the output picture -> used for opencv preprocess]
         :rtype: str
         """
+        t1 = time.time()
         if not os.path.isdir(output_folder):
             os.mkdir(output_folder)
 
@@ -101,6 +103,8 @@ class etiltEOL(_wavEOL):
         # print(f'spec saved as picture in {output_folder}, with name {title + suffix + self.PIC_FORMAT}')
         plt.close('all')
         self.spec_pic_path = save_path
+        t2 = time.time()
+        print('save stft file time: {}'.format(t2 - t1))
 
 
     def plot_stft_custom_spec(self, vmin:int =VMIN , vmax:int= VMAX, figsize=_wavEOL.FIGSIZE) -> None:
@@ -144,7 +148,7 @@ class etiltEOL(_wavEOL):
         :param suffix: [suffix], defaults to ''
         :type suffix: str, optional
         """
-
+        t1 = time.time()
         if not self.spec_pic_path:
             print('please save stft spec picture first !!')
         else :
@@ -165,6 +169,9 @@ class etiltEOL(_wavEOL):
             
             # print(f'save cv picture for {fn + suffix + etiltEOL.PIC_FORMAT} -> DONE ')
             plt.close('all')
+        t2 = time.time()
+        print('save cv file time: {}'.format(t2 - t1))
+
 
 
     def _cv_prepocess_up(self,image_path,lower_cut:int = LOWER_CUT,upper_cut:int = UPPER_CUT, blur_size: int = BLUR_SIZE,
