@@ -223,7 +223,7 @@ class inferenceEOL(object):
                 
                 line2write = '\n'.join(line2write)
                 text_file.write(line2write + os.linesep)
-            print(f'save prediction result to {file_name} -> Done')
+            # print(f'save prediction result to {file_name} -> Done')
             
         return detections_api
 
@@ -268,7 +268,7 @@ class inferenceEOL(object):
                 
                 line2write = '\n'.join(line2write)
                 text_file.write(line2write + os.linesep)
-            print(f'save prediction result to {file_name} -> Done')
+            # print(f'save prediction result to {file_name} -> Done')
 
         image_np_stft = self.load_image_into_numpy_array(stft_img_path)
         image_np_with_detections = image_np_stft.copy()
@@ -301,7 +301,7 @@ class inferenceEOL(object):
             file_name = os.path.join(save_png_folder, f'{title}.png')
             plt.savefig(file_name, bbox_inches='tight', pad_inches=0, transparent=False)
             
-            print(f'save inference result picture for {file_name} -> DONE ')
+            # print(f'save inference result picture for {file_name} -> DONE ')
             plt.close('all')
 
         return image_np_with_detections

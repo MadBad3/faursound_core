@@ -98,7 +98,7 @@ class etiltEOL(_wavEOL):
         save_path = os.path.join(output_folder, title + suffix + self.PIC_FORMAT)      
         plt.savefig(save_path, bbox_inches='tight', pad_inches=0,transparent=False, dpi = dpi)
 
-        print(f'spec saved as picture in {output_folder}, with name {title + suffix + self.PIC_FORMAT}')
+        # print(f'spec saved as picture in {output_folder}, with name {title + suffix + self.PIC_FORMAT}')
         plt.close('all')
         self.spec_pic_path = save_path
 
@@ -163,7 +163,7 @@ class etiltEOL(_wavEOL):
             plt.savefig(os.path.join(output_folder, fn + suffix + etiltEOL.PIC_FORMAT),
                         bbox_inches='tight', pad_inches=0, transparent=False)
             
-            print(f'save cv picture for {fn + suffix + etiltEOL.PIC_FORMAT} -> DONE ')
+            # print(f'save cv picture for {fn + suffix + etiltEOL.PIC_FORMAT} -> DONE ')
             plt.close('all')
 
 

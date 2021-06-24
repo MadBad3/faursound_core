@@ -4,7 +4,7 @@ import os
 import librosa
 import librosa.display
 from itertools import count
-
+import time
 
 class _wavEOL(object):
 
@@ -61,9 +61,12 @@ class _wavEOL(object):
         :param offset: [time for start to read, in the audio file. in second ], defaults to None
         :type offset: float, optional
         """
+        t1 = time.time()
         self.y, self.sr = librosa.load(self.wav_file, sr=22050, offset=offset, mono=True)
 
         self._update_duration()
+        t2 = time.time()
+        print('load wav file to y time: {}'.format(t2 - t1))
 
 
     def cut_wav_in_second(self, left_cut: float, right_cut: float, cut_margin:float = 0.1) -> None:
@@ -147,7 +150,7 @@ class _wavEOL(object):
         plt.axis('off')        
         plt.savefig(os.path.join(save_folder, title + self.PIC_FORMAT), bbox_inches='tight', pad_inches=0,transparent=False)
 
-        print(f'spec saved as picture in {save_folder}, with name {title}.jpg')
+        # print(f'spec saved as picture in {save_folder}, with name {title}.jpg')
         plt.close('all')
 
 
