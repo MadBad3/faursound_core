@@ -241,10 +241,24 @@ class df2NVHExpert(object):
         print(f'save excel to {self.excel_path} -> Done !')
 
 
-    def return_json(self):
-        result = self.df.iloc[:,1:-2].to_json(orient="split")
+    def return_json_from_one_txt(self,txt_file):
+
+        df3 = self._process_one_txt_file(txt_file = txt_file)
+        result = df3.iloc[:,1:].to_json(orient="records")
         return result
         
+
+    def return_json_from_one_txt_full(self,txt_file):
+
+        df3 = self._process_one_txt_file(txt_file = txt_file)
+        df3_to_merge = df3.iloc[:,1:]
+        df_empty = self._create_empty_df()
+        for column in df3_to_merge.columns:
+            df_empty[column] = df3_to_merge[column]  # fill it the value to df_empty
+
+        result = df_empty.to_json(orient="records")
+        return result
+
 
     def _add_wav_fn_column(self, df:pd.DataFrame) -> None:
         """add wav fn column to df

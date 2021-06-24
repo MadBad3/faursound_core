@@ -16,9 +16,9 @@ class etiltWav(_wavNVH):
     """
 
     LABELS = [
-            'blocking','pain','hooting','modulation','grinding',
+            'vibration_machine','pain','hooting','modulation','grinding',
             'over_running','tic','knock','scratching','spike','bench',
-            'measurement_issue','rattle_product','buzzing','vibration_machine',
+            'measurement_issue','rattle_product','buzzing','blocking',
             ]
 
     LABEL_LIST_PLANT = [

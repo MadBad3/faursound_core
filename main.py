@@ -5,12 +5,14 @@ import io
 import shutil
 import os
 import re
+import json
 from inference import inference
 from fastapi import FastAPI, File, UploadFile
-from fastapi.responses import FileResponse
 import time
 from df2NVHExpert import df2NVHExpert
 from azure_client import fsAzureStorage
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+
 
 path2label_map_json = r'./label_map.json' 
 
@@ -23,8 +25,13 @@ azureClient = fsAzureStorage(model_version = model_version)
 
 OUTPUT_PATH = r'./detections'   # path to output folder where images with detections are saved
 
-app = FastAPI()
 
+app = FastAPI(
+        title="FaurSound API",
+        version="1.0",
+        description="Do something awesome, while being monitored.",
+)
+FastAPIInstrumentor.instrument_app(app)
 
 @app.post("/EOL/")
 async def inference_with_EOL_output(wav: UploadFile = File(...)):
@@ -80,44 +87,46 @@ async def inference_with_EOL_output(wav: UploadFile = File(...)):
     return StreamingResponse(io.BytesIO(img_encoded.tobytes()), media_type="image/png")
 
 
+@app.post("/EOL/cl")
+async def inference_with_EOL_raw_output(wav: UploadFile = File(...)):
 
-# @app.route('/EOL/cl', methods=['POST'])
-# def inference_with_EOL_raw_output():
-#     wav_file = request.files["wav"]
-#     wav_name = wav_file.filename
-#     title, _ = os.path.splitext(wav_name)
-#     cwd_path = os.getcwd()
-#     wav_file_path = os.path.join(cwd_path, wav_name)
-#     wav_file.save(wav_file_path)
-#     wav_file.close()
+    t1 = time.time()
+    wav_name = wav.filename
+    title, _ = os.path.splitext(wav_name)
+    temp_folder = r'./temp'
+    wav_file_path = os.path.join(temp_folder, wav_name)
+    try:
+        with open(wav_file_path,'wb+') as buffer:
+            shutil.copyfileobj(wav.file, buffer)
+    finally:
+        wav.file.close()
 
-#     inferenceAPI.get_spec_pics_for_wav(wav_file_path,output_folder=cwd_path , get_infor_from_fn=True)
-#     cv_file_path = os.path.join(cwd_path,'cv',f'{title}.jpg')
-#     stft_file_path = os.path.join(cwd_path,'stft',f'{title}.jpg')
+    t2 = time.time()
+    print('save wav file time: {}'.format(t2 - t1))
 
-#     _ = inferenceAPI.inference_as_raw_output(cv_file_path, to_file = True)
+    inferenceAPI.get_spec_pics_for_wav(wav_file_path,output_folder=temp_folder , get_infor_from_fn=True)
+    cv_file_path = os.path.join(temp_folder,'cv',f'{title}.jpg')
+    stft_file_path = os.path.join(temp_folder,'stft',f'{title}.jpg')
 
-#     txt_output_folder = r'./cv/prediction_txt_raw_output'
-#     stft_folder = os.path.dirname(stft_file_path)
-#     NVH = df2NVHExpert(path2prediction = txt_output_folder,path2stft = stft_folder,
-#             path2label_map_json = path2label_map_json, output_path = r'./detections/cleaned_csv')
+    _ = inferenceAPI.inference_as_raw_output(cv_file_path, to_file = True)
 
-#     output = NVH.return_json()
-#     parsed = json.loads(output)
-#     json_str = json.dumps(parsed, indent=4)
+    txt_dir_path=os.path.join(os.path.dirname(cv_file_path),'prediction_txt_raw_output')
+    txt_file_path = os.path.join(txt_dir_path, f'{title}.txt')
+    stft_folder = os.path.dirname(stft_file_path)
+    NVH = df2NVHExpert(path2prediction = txt_dir_path,path2stft = stft_folder,
+                        path2label_map_json = path2label_map_json)
 
-#     #remove temporary image
-#     os.remove(wav_file_path)
-#     os.remove(cv_file_path)
-#     os.remove(stft_file_path)
-#     for file in os.listdir(txt_output_folder):
-#         os.remove(os.path.join(txt_output_folder,file))
+    output = NVH.return_json_from_one_txt_full(txt_file = f'{title}.txt')
+    parsed = json.loads(output)
+    json_str = json.dumps(parsed, indent=4)
 
-#     try:
-#         # return jsonify({"response":json_str}), 200
-#         return json_str, 200
-#     except FileNotFoundError:
-#         abort(404)
+    #remove temporary image
+    os.remove(wav_file_path)
+    os.remove(cv_file_path)
+    os.remove(stft_file_path)
+    os.remove(txt_file_path)
+
+    return json_str
 
 
 @app.get('/hello/')
@@ -125,3 +134,4 @@ def hello():
     faursound_api_github = r'https://github.com/WangCHEN9/faursound_core'
     response = f'Hello, see how to use this API in {faursound_api_github} !'
     return response
+

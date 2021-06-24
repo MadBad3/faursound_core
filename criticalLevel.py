@@ -3,12 +3,6 @@ import numpy as np
 from typing import List
 import cv2 as cv
 from itertools import count
-import os
-import sys
-# sys.path.append((os.path.dirname(os.path.dirname(__file__))))
-
-from etiltWav import etiltWav
-from itertools import count
 
 
 class criticalLevel(object):
@@ -42,7 +36,7 @@ class criticalLevel(object):
         score = float(score)
 
         cutted_img = self._read_pic_and_box_to_array(stft_pic_path, x1,y1,x2,y2)
-        output = self.calculate_critical_level(label = label, score=score, cutted_img = cutted_img)
+        output = self._calculate_critical_level(label = label, score=score, cutted_img = cutted_img)
         return output
 
 
@@ -60,7 +54,33 @@ class criticalLevel(object):
         return df
 
 
-    def calculate_critical_level(self, label:str, score:float, cutted_img:np.ndarray):
+    def _get_cut_center_position(self,stft_pic_path:str, x1:float,y1:float,x2:float,y2:float):
+        img = cv.imread(stft_pic_path)
+        y_height, x_width = img.shape
+
+        center_position = ((x2-x1)/x_width,(y2-y1)/y_height)
+        return center_position
+
+
+    def _check_detection_position(self, stft_pic_path:str, x1:float,y1:float,x2:float,y2:float, label:str):
+        center_position_x, center_position_y = self._get_cut_center_position(stft_pic_path,
+                                                                            x1=x1,y1=y1,x2=x2,y2=y2)
+        pass
+
+
+    def _check_blocking_position(self, center_position_x, center_position_y):
+        blocking_position_range = {
+            'center_x_min': 0.0,
+            'center_y_min': 0.01,
+            'center_x_max': 1.0,
+            'center_y_max': 0.99,
+        }
+        pass
+
+
+
+    def _calculate_critical_level(self, label:str, score:float, cutted_img:np.ndarray):
+
         if label == 'blocking':
             output = self._calcul_cl_blocking(cutted_img)
 
@@ -247,7 +267,7 @@ class criticalLevel(object):
         if score > score_limit:
             return next(self.num_spike)
         else:
-            return self.num_spike
+            return next(self.num_spike)   #! was wanting return only self.num_spike , but bugged with count
 
     def _calcul_cl_bench(self,cutted_img:np.ndarray) -> int:
         """critical level calculation for bench

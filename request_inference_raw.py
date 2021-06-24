@@ -2,9 +2,9 @@ import requests
 import os
 import progressbar
 
-URL = 'http://localhost:8000/EOL'
+URL = 'http://localhost:8000/EOL/cl'
 
-def inference_wav(file_path, url = URL):
+def inference_wav_raw(file_path, url = URL):
     files = {'wav': open(file_path, 'rb')}
     try:
         r = requests.post(url, files=files)
@@ -16,7 +16,7 @@ def inference_wav(file_path, url = URL):
     except requests.exceptions.RequestException as e:
         # catastrophic error. bail.
         raise SystemExit(e)
-
+    return r.json()
 
 def process_one_wav_folder(wav_folder):
     file_lists = os.listdir(wav_folder)
@@ -28,8 +28,9 @@ def process_one_wav_folder(wav_folder):
     for count, file_name in enumerate(file_lists):
         file_path = os.path.join(wav_folder, file_name)
         
-        inference_wav(file_path)
+        response = inference_wav_raw(file_path)
         bar.update(count)
+        print(f'response from faursound-api = {response}')
 
 
 if __name__ == "__main__":
