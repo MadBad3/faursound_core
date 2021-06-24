@@ -89,8 +89,12 @@ async def inference_with_EOL_output(wav: UploadFile = File(...)):
 
 
 @app.get('/hello/')
-def hello():
+async def hello():
     faursound_api_github = r'https://github.com/WangCHEN9/faursound_core'
     response = f'Hello, see how to use this API in {faursound_api_github} !'
     return response
 
+
+@app.post("/test/")
+async def test_upload_wav(wav: UploadFile = File(...)):
+    return {"filename": wav.filename}

@@ -4,7 +4,9 @@ import progressbar
 import time
 import json
 
-URL = 'http://localhost:8000/EOL/'
+# URL = 'http://localhost:8000/EOL/'
+# URL = 'http://localhost:8000/test/'
+URL = 'http://localhost:8000/hello/'
 
 def inference_wav_raw(file_path, url = URL):
     t1 = time.time()
@@ -36,6 +38,7 @@ def process_one_wav_folder(wav_folder, log_file_path):
         response, time_spend = inference_wav_raw(file_path)
         # bar.update(count)
         print(response)
+        print(f'time spend = {time_spend}')
         update_log_file(log_file_path, str(round(time_spend,3)))
 
 
@@ -45,11 +48,23 @@ def update_log_file(log_file, infor:str):
         f.write("\n")
 
 
+def hello_request(url = URL):
+    t1 = time.time()
+    r = requests.get(url)
+    t2 = time.time()
+    return (r.json(), (t2 - t1))
+
+
 if __name__ == "__main__":
     wav_folder = r'D:\Github\FaurSound\data\01 fev\Waves'
     now = round(time.time(),2)
     log_file = f'./log/api_log_{now}.txt'
     all_sub_folders = [ os.path.join(wav_folder,name) for name in os.listdir(wav_folder) if os.path.isdir(os.path.join(wav_folder, name)) ]
 
-    for folder in all_sub_folders:
-        process_one_wav_folder(folder, log_file)
+    # for folder in all_sub_folders:
+    #     process_one_wav_folder(folder, log_file)
+
+    for i in range(5000):
+        response, time_spend = hello_request()
+        print(response)
+        print(f'time spend = {time_spend}')
