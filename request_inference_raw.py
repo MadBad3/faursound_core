@@ -2,7 +2,7 @@ import requests
 import os
 import progressbar
 
-URL = 'http://localhost:8000/EOL/cl'
+URL = 'http://localhost:8000/EOL/'
 
 def inference_wav_raw(file_path, url = URL):
     files = {'wav': open(file_path, 'rb')}
