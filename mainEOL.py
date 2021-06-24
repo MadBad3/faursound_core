@@ -83,7 +83,7 @@ async def inference_with_EOL_output(wav: UploadFile = File(...)):
     print('prepare output time: {}'.format(t5 - t4))
     print('TOTAL time: {}'.format(t5 - t1))
     #! log response time
-    update_log_file(r'./log/server_log_time.txt', str(round((t5 - t1),3)))
+    update_log_file(f'./log/server_log.txt', str(round((t5 - t1),3)))
     # return StreamingResponse(io.BytesIO(img_encoded.tobytes()), media_type="image/png")
     return json_str
 

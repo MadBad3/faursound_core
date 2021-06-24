@@ -1,11 +1,9 @@
 tensorflow==2.4.1
-Flask==2.0.0
 gunicorn==20.1.0
 librosa==0.8.0
-matplotlib
+matplotlib==3.4.1
 opencv-python-headless
 pandas
-google_api_python_client
 openpyxl
 pytest
 mock

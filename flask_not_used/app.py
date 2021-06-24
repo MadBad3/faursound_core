@@ -13,6 +13,8 @@ from df2NVHExpert import df2NVHExpert
 from datetime import datetime
 from azure_client import fsAzureStorage
 
+#! flask API is real slow when loading wav, we give-up this solution -> move on with faster API
+
 path2label_map_json = r'./label_map.json' 
 
 model_path = r'./FaurSound_model/saved_model_image_input_v1-4'
@@ -91,6 +93,24 @@ def faursound_app(inferenceAPI = inferenceAPI, model_version = model_version, te
         except FileNotFoundError:
             abort(404)
 
+
+    @app.route('/test', methods=['POST'])
+    def test_with_wav():
+        
+        t1 = time.time()
+        wav_file = request.files["wav"]
+        wav_file.close()
+        t2 = time.time()
+        print('save wav file time: {}'.format(t2 - t1))
+
+        json_str = {
+            'item':'this is a test'
+        }
+        try:
+            return json_str, 200
+        except FileNotFoundError:
+            abort(404)
+            
 
     @app.route('/hello')
     def hello():

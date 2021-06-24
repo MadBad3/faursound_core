@@ -48,7 +48,8 @@ def update_log_file(log_file, infor:str):
 
 if __name__ == "__main__":
     wav_folder = r'D:\Github\FaurSound\data\01 fev\Waves'
-    log_file = r'./log/api_log.txt'
+    now = round(time.time(),2)
+    log_file = f'./log/api_log_{now}.txt'
     all_sub_folders = [ os.path.join(wav_folder,name) for name in os.listdir(wav_folder) if os.path.isdir(os.path.join(wav_folder, name)) ]
 
     for folder in all_sub_folders:
