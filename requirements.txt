@@ -11,4 +11,6 @@ pytest
 mock
 azure-storage-blob
 progressbar
-flask_monitoringdashboard
+fastapi
+uvicorn[standard]
+python-multipart
