@@ -30,7 +30,7 @@ def process_one_wav_folder(wav_folder):
         
         response = inference_wav_raw(file_path)
         bar.update(count)
-        print(f'response from faursound-api = {response}')
+        print(f'{count} response from faursound-api = {response}')
 
 
 if __name__ == "__main__":
