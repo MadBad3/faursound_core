@@ -17,6 +17,7 @@ credential/
 gcp_app_flex_engine/credential/
 secret/
 *.db
+log/
 
 # Distribution / packaging
 .Python

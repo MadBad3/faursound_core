@@ -29,6 +29,11 @@ app = FastAPI(
 )
 FastAPIInstrumentor.instrument_app(app)
 
+def update_log_file(log_file, infor:str):
+    with open(log_file, "a") as f:
+        f.write(infor) 
+        f.write("\n")
+
 @app.post("/EOL/")
 async def inference_with_EOL_output(wav: UploadFile = File(...)):
 
@@ -77,7 +82,8 @@ async def inference_with_EOL_output(wav: UploadFile = File(...)):
     t5 = time.time()
     print('prepare output time: {}'.format(t5 - t4))
     print('TOTAL time: {}'.format(t5 - t1))
-
+    #! log response time
+    update_log_file(r'./log/server_log_time.txt', str(round((t5 - t1),3)))
     # return StreamingResponse(io.BytesIO(img_encoded.tobytes()), media_type="image/png")
     return json_str
 
