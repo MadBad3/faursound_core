@@ -2,8 +2,10 @@ import requests
 import os
 import progressbar
 import time
+import json
+import pprint
 
-URL = 'http://localhost:8000/EOL/'
+URL = 'http://localhost:8000/EOL'
 
 def inference_wav_raw(file_path, url = URL):
     t1 = time.time()
@@ -34,7 +36,7 @@ def process_one_wav_folder(wav_folder, log_file_path):
         
         response, time_spend = inference_wav_raw(file_path)
         # bar.update(count)
-        print(f'number:{count} response from faursound-api = {response}')
+        pprint.pprint(response)
         update_log_file(log_file_path, str(round(time_spend,3)))
 
 
