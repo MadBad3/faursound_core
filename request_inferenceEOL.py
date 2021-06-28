@@ -3,6 +3,17 @@ import os
 import progressbar
 import time
 import json
+import logging
+import http.client
+
+from requests.sessions import session
+
+http.client.HTTPConnection.debuglevel = 1
+logging.basicConfig()
+logging.getLogger().setLevel(logging.DEBUG)
+requests_log = logging.getLogger('requsets.packages.urllib3')
+requests_log.setLevel(logging.DEBUG)
+requests_log.propagate = True
 
 # URL = 'http://localhost:8000/EOL/'
 # URL = 'http://localhost:8000/test/'
@@ -48,9 +59,14 @@ def update_log_file(log_file, infor:str):
         f.write("\n")
 
 
-def hello_request(url = URL):
+def hello_request(url = URL, session = False):
     t1 = time.time()
-    r = requests.get(url)
+    if session:
+        print('using requests.Session()')
+        session_ = requests.Session()
+        r = session_.get(url)
+    else:
+        r = requests.get(url)
     t2 = time.time()
     return (r.json(), (t2 - t1))
 
@@ -63,8 +79,7 @@ if __name__ == "__main__":
 
     # for folder in all_sub_folders:
     #     process_one_wav_folder(folder, log_file)
-
-    for i in range(5000):
-        response, time_spend = hello_request()
+    for i in range(10):
+        response, time_spend = hello_request(session=True)
         print(response)
         print(f'time spend = {time_spend}')

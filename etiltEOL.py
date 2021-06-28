@@ -97,14 +97,16 @@ class etiltEOL(_wavEOL):
         
         title , _ = os.path.splitext(self.fn)
         plt.axis('off')
+        t2 = time.time()
+        print('stft pic prepare time: {}'.format(t2 - t1))
         save_path = os.path.join(output_folder, title + suffix + self.PIC_FORMAT)      
         plt.savefig(save_path, bbox_inches='tight', pad_inches=0,transparent=False, dpi = dpi)
 
         # print(f'spec saved as picture in {output_folder}, with name {title + suffix + self.PIC_FORMAT}')
         plt.close('all')
         self.spec_pic_path = save_path
-        t2 = time.time()
-        print('save stft file time: {}'.format(t2 - t1))
+        t3 = time.time()
+        print('write stft file to disk time: {}'.format(t3 - t2))
 
 
     def plot_stft_custom_spec(self, vmin:int =VMIN , vmax:int= VMAX, figsize=_wavEOL.FIGSIZE) -> None:
@@ -163,14 +165,15 @@ class etiltEOL(_wavEOL):
             fig, ax = plt.subplots(figsize=figsize)
             ax.imshow(cv_pic)
             ax.axis('off')
-
+            t2 = time.time()
+            print('cv file prepare time: {}'.format(t2 - t1))
             plt.savefig(os.path.join(output_folder, fn + suffix + etiltEOL.PIC_FORMAT),
                         bbox_inches='tight', pad_inches=0, transparent=False)
             
             # print(f'save cv picture for {fn + suffix + etiltEOL.PIC_FORMAT} -> DONE ')
             plt.close('all')
-        t2 = time.time()
-        print('save cv file time: {}'.format(t2 - t1))
+        t3 = time.time()
+        print('write cv file to disk time: {}'.format(t3 - t2))
 
 
 

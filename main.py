@@ -73,7 +73,7 @@ async def inference_with_EOL_output(wav: UploadFile = File(...)):
     _, img_encoded = cv2.imencode('.png', im_BGR)
     # response = img_encoded.tostring()
 
-    azureClient.upload_to_azure(cv_file_path,txt_file_path,predict_pic_fp)
+    azureClient.upload_prediction_to_azure(cv_file_path,txt_file_path,predict_pic_fp)
     #remove temporary files
     os.remove(wav_file_path)
     os.remove(cv_file_path)
