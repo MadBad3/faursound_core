@@ -73,6 +73,9 @@ async def inference_with_EOL_output(wav: UploadFile = File(...)):
     output = NVH.return_json_from_one_txt_full(txt_file = f'{title}.txt')
     parsed = json.loads(output)
     json_str = json.dumps(parsed, indent=4)
+    json_output_folder = r'./json_output'
+    with open(os.path.join(json_output_folder,f'{title}.json'), 'w', encoding='utf-8') as f:
+        json.dump(parsed, f, ensure_ascii=False, indent=4)
 
     wav.file.close()
     os.remove(cv_file_path)#? cv file to be saved

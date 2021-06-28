@@ -15,9 +15,9 @@ requests_log = logging.getLogger('requsets.packages.urllib3')
 requests_log.setLevel(logging.DEBUG)
 requests_log.propagate = True
 
-# URL = 'http://localhost:8000/EOL/'
+URL = 'http://localhost:8000/EOL/'
 # URL = 'http://localhost:8000/test/'
-URL = 'http://localhost:8000/hello/'
+# URL = 'http://localhost:8000/hello/'
 
 def inference_wav_raw(file_path, url = URL):
     t1 = time.time()
@@ -77,9 +77,9 @@ if __name__ == "__main__":
     log_file = f'./log/api_log_{now}.txt'
     all_sub_folders = [ os.path.join(wav_folder,name) for name in os.listdir(wav_folder) if os.path.isdir(os.path.join(wav_folder, name)) ]
 
-    # for folder in all_sub_folders:
-    #     process_one_wav_folder(folder, log_file)
-    for i in range(10):
-        response, time_spend = hello_request(session=True)
-        print(response)
-        print(f'time spend = {time_spend}')
+    for folder in all_sub_folders:
+        process_one_wav_folder(folder, log_file)
+    # for i in range(10):
+    #     response, time_spend = hello_request(session=True)
+    #     print(response)
+    #     print(f'time spend = {time_spend}')
