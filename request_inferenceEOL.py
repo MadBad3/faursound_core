@@ -8,6 +8,8 @@ import http.client
 import cProfile
 import pstats
 from requests.sessions import session
+import socket
+import requests.packages.urllib3.util.connection as urllib3_cn
 
 # http.client.HTTPConnection.debuglevel = 1
 # logging.basicConfig()
@@ -15,6 +17,15 @@ from requests.sessions import session
 # requests_log = logging.getLogger('requsets.packages.urllib3')
 # requests_log.setLevel(logging.WARNING)
 # requests_log.propagate = True
+
+def allowed_gai_family():
+    """
+        https://github.com/shazow/urllib3/blob/master/urllib3/util/connection.py
+    """
+    return socket.AF_INET
+
+urllib3_cn.allowed_gai_family = allowed_gai_family
+
 
 URL = 'http://localhost:8000/EOL/'
 # URL = 'http://localhost:8000/test/'
@@ -79,7 +90,7 @@ def hello_request(url = URL_HELLO, session = False):
 
 
 if __name__ == "__main__":
-    wav_folder = r'D:\Github\FaurSound\data\01 fev\Waves'
+    wav_folder = r'.\data\01 fev\Waves'
     now = round(time.time(),2)
     log_file = f'./log/api_log_{now}.txt'
     all_sub_folders = [ os.path.join(wav_folder,name) for name in os.listdir(wav_folder) if os.path.isdir(os.path.join(wav_folder, name)) ]
