@@ -42,6 +42,8 @@ async def inference_with_EOL_output(wav: UploadFile = File(...)):
 
     title, _ = os.path.splitext(wav_name)
     temp_folder = r'./temp'
+    if not os.path.isdir(temp_folder):
+        os.mkdir(temp_folder)
     t2 = time.time()
     print('save wav file time: {}'.format(t2 - t1))
 
@@ -74,6 +76,9 @@ async def inference_with_EOL_output(wav: UploadFile = File(...)):
     parsed = json.loads(output)
     json_str = json.dumps(parsed, indent=4)
     json_output_folder = r'./json_output'
+    if not os.path.isdir(json_output_folder):
+        os.mkdir(json_output_folder)
+
     with open(os.path.join(json_output_folder,f'{title}.json'), 'w', encoding='utf-8') as f:
         json.dump(parsed, f, ensure_ascii=False, indent=4)
 
@@ -86,6 +91,8 @@ async def inference_with_EOL_output(wav: UploadFile = File(...)):
     print('prepare output time: {}'.format(t5 - t4))
     print('TOTAL time: {}'.format(t5 - t1))
     #! log response time
+    if not os.path.isdir(r'./log'):
+        os.mkdir(r'./log')
     update_log_file(f'./log/server_log.txt', str(round((t5 - t1),3)))
     # return StreamingResponse(io.BytesIO(img_encoded.tobytes()), media_type="image/png")
     return json_str

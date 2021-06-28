@@ -18,6 +18,8 @@ gcp_app_flex_engine/credential/
 secret/
 *.db
 log/
+json_output/
+speed_profiling/
 
 # Distribution / packaging
 .Python
