@@ -90,7 +90,8 @@ def hello_request(url = URL_HELLO, session = False):
 
 
 if __name__ == "__main__":
-    wav_folder = r'.\data\01 fev\Waves'
+    # wav_folder = r'.\data\01 fev\Waves'
+    wav_folder = r'D:\Github\FaurSound\data\01 fev\Waves'
     now = round(time.time(),2)
     log_file = f'./log/api_log_{now}.txt'
     all_sub_folders = [ os.path.join(wav_folder,name) for name in os.listdir(wav_folder) if os.path.isdir(os.path.join(wav_folder, name)) ]
