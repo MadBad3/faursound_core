@@ -4,6 +4,9 @@ import re
 from configparser import ConfigParser
 from datetime import datetime
 import glob
+import xml.etree.ElementTree as ET
+from etiltEOL import etiltEOL
+import sys
 
 class fsAzureStorage(object):
 
@@ -93,22 +96,25 @@ class fsAzureStorage(object):
         print(f'upload files to Azure blob storage -> Done ')
 
 
-    def commit_training_sample(self, folder_to_upload, direction:str):
-        def _get_direction_from_fn(file_name):
+    def commit_training_sample(self, folder_to_upload):
+        def get_direction_from_fn(file_name):
             #? do we need this to get direction automaticly?
             direction_ = re.search('Up|Down', file_name)
             return direction_.group()
 
         self._update_date()
 
-        metadata = {
-            'validated_label': 'no',
-            'direction': direction,
-            'date':self.date,
-        }
         xml_file_list = glob.glob(folder_to_upload + '\*.xml')
 
         for xml_fp in xml_file_list:
+            direction = get_direction_from_fn(os.path.basename(xml_fp))
+            labels = self._get_noise_list_from_xml(xml_fp)
+            metadata = {
+            'validated_label': 'no',
+            'direction': direction,
+            'date':self.date,
+            'labels': ','.join(labels) ,
+            }
             cv_pic_fp = self._get_image_fp_based_on_xml_fp(xml_fp)
             self._upload_file(container_name = self.cv_pic_container, file_path = cv_pic_fp, metadata = metadata)
             self._upload_file(container_name = self.cv_pic_container, file_path = xml_fp, metadata = metadata)
@@ -143,6 +149,29 @@ class fsAzureStorage(object):
         pass
 
 
+    def _get_noise_list_from_xml(self, xml_file):
+        def count_class(class_name, file):
+            number = total_class_number.get(class_name, None)
+            if number is None:
+                print('[Warning] Not found class name: %s in %s' % (class_name, file))
+            else:
+                total_class_number[class_name] = number + 1
+
+        total_class_number = { key: 0 for key in etiltEOL.LABELS}
+        try:
+            tree = ET.parse(xml_file)
+            root = tree.getroot()
+        except Exception:
+            print("[Error] Cannot parse file %s" % xml_file)
+            sys.exit(1)
+        object_list = root.findall('object')
+        if len(object_list) > 0:
+            for target in object_list:
+                count_class(target.find('name').text, xml_file)
+        return [ key for key in total_class_number.keys() if total_class_number[key] > 0]
+
+
+
 if __name__ == '__main__':
 
     azureClient = fsAzureStorage(model_version = '1-3-0', for_training_sample = True)
@@ -151,7 +180,8 @@ if __name__ == '__main__':
     sub_folder = r'v1-5-0'
     local_folder = os.path.join(training_sample_dict,sub_folder)
 
-    azureClient.pull_training_sample(local_folder = local_folder)
+    # azureClient.pull_training_sample(local_folder = local_folder)
+    azureClient.commit_training_sample(folder_to_upload = local_folder)
 
 
 
