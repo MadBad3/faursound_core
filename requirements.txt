@@ -8,7 +8,6 @@ openpyxl
 pytest
 mock
 azure-storage-blob
-progressbar
 fastapi
 uvicorn[standard]
 python-multipart
@@ -17,3 +16,4 @@ opentelemetry-sdk
 opentelemetry-exporter-jaeger
 opentelemetry-instrumentation-fastapi
 snakeviz
+httpx
