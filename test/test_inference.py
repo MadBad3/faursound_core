@@ -1,14 +1,15 @@
 import pytest, os, shutil, numpy as np
 import sys
-# sys.path.append((os.path.dirname(os.path.dirname(__file__))))
+sys.path.append((os.path.dirname(os.path.dirname(__file__))))
 from inference import inference
 from mock import patch
 from etiltWav import etiltWav
 
-path = r'./test/folder'
-path2label_map_json = r'./test/label_map.json'
-path2img = r'./test/E-Tilt_6202-PC1_2402749_20210201_052215_11ACF9023_750N - Down.jpg'
-path2wav = r'./test/E-Tilt_6202-PC1_2402749_20210201_052215_11ACF9023_750N - Down.wav'
+test_folder_location = os.path.dirname(__file__)
+path = os.path.join(test_folder_location, r'folder')
+path2label_map_json = os.path.join(test_folder_location,r'label_map.json')
+path2img = os.path.join(test_folder_location,r'E-Tilt_6202-PC1_2402749_20210201_052215_11ACF9023_750N - Down.jpg')
+path2wav = os.path.join(test_folder_location,r'E-Tilt_6202-PC1_2402749_20210201_052215_11ACF9023_750N - Down.wav')
 totalLabels = len(etiltWav.LABELS)
 image_shape = (770, 968, 3)
 x1 = 1

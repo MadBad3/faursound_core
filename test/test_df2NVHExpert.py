@@ -1,14 +1,16 @@
 import sys
-from df2NVHExpert import df2NVHExpert
 import pytest, os, sys, pandas as pd
-# sys.path.append((os.path.dirname(os.path.dirname(__file__))))
+sys.path.append((os.path.dirname(os.path.dirname(__file__))))
+from df2NVHExpert import df2NVHExpert
 
 from openpyxl import load_workbook
 from etiltWav import etiltWav
 
-path2stft = r'./test'
-path2prediction = r'./test/text'
-path2csv = r'./test/csv_folder'
+test_folder_location = os.path.dirname(__file__)
+
+path2stft = test_folder_location
+path2prediction = os.path.join(test_folder_location, r'text')
+path2csv = os.path.join(test_folder_location, r'csv_folder')
 text_file = 'E-Tilt_6202-PC1_2402749_20210201_052215_11ACF9023_750N - Down.txt'
 void_text_file = 'Void.txt'
 path2label_map_json = os.path.join(path2stft+'/label_map.json')

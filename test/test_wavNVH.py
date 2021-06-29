@@ -1,11 +1,12 @@
 import pytest, librosa, os, shutil, numpy as np
 import sys
-# sys.path.append((os.path.dirname(os.path.dirname(__file__))))
+sys.path.append((os.path.dirname(os.path.dirname(__file__))))
 from _wavNVH import _wavNVH
 from mock import patch
 
-filepath_wav = r'./test/E-Tilt_6202-PC1_2402749_20210201_052216_11ACF9023_750N - Up.wav'
-filepath_mp3 = r'./test/E-Tilt_6202-PC1_2402749_20210201_052216_11ACF9023_750N - Up.mp3'
+test_folder_location = os.path.dirname(__file__)
+filepath_wav = os.path.join(test_folder_location, r'E-Tilt_6202-PC1_2402749_20210201_052216_11ACF9023_750N - Up.wav')
+filepath_mp3 = os.path.join(test_folder_location, r'E-Tilt_6202-PC1_2402749_20210201_052216_11ACF9023_750N - Up.mp3')
 
 n_fft = 512
 hop_length = 128

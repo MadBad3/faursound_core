@@ -1,9 +1,11 @@
 import pytest, os, pandas as pd
 import sys
-# sys.path.append((os.path.dirname(os.path.dirname(__file__))))
+sys.path.append((os.path.dirname(os.path.dirname(__file__))))
 from criticalLevel import criticalLevel
 
-output_folder = r'./test'
+test_folder_location = os.path.dirname(__file__)
+output_folder = test_folder_location
+
 label = 'blocking'
 x1 = float(1)
 y1 = float(250)

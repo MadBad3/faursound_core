@@ -1,12 +1,14 @@
 import pytest, os, pandas as pd, numpy as np, cv2 as cv
 import sys
-# sys.path.append((os.path.dirname(os.path.dirname(__file__))))
+sys.path.append((os.path.dirname(os.path.dirname(__file__))))
 from etiltWav import etiltWav
 from mock import patch, call
 
 n_fft = 512
 hop_length = 128
-output_folder = r'./test'
+test_folder_location = os.path.dirname(__file__)
+
+output_folder = test_folder_location
 
 
 def test_load_df_meta():
