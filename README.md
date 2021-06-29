@@ -5,7 +5,9 @@
 ## install
 
 > conda create --name fs python=3.8
+
 > conda activate fs
+
 > pip install -r requirements.txt
 
 ## faursound core functions
