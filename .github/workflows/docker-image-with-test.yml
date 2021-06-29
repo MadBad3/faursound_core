@@ -12,12 +12,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout github repo (+ download lfs dependencies)
+    - name: Checkout github repo without lfs
       uses: actions/checkout@v2
       with:
-        lfs: true
-    - name: Checkout LFS objects
-      run: git lfs checkout
+        lfs: false
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
