@@ -1,6 +1,6 @@
 # faursound-core
-[![Docker Image CI with Test](https://github.com/WangCHEN9/faursound_core/actions/workflows/docker-image-with-test.yml/badge.svg)](https://github.com/WangCHEN9/faursound_core/actions/workflows/docker-image-with-test.yml)
 [![pytest](https://github.com/GVSCAL/faursound_core/actions/workflows/pytest.yml/badge.svg)](https://github.com/GVSCAL/faursound_core/actions/workflows/pytest.yml)
+[![Docker Image CI](https://github.com/GVSCAL/faursound_core/actions/workflows/docker-image-with-test.yml/badge.svg)](https://github.com/GVSCAL/faursound_core/actions/workflows/docker-image-with-test.yml)
 ## install
 
 > conda create --name fs python=3.8
