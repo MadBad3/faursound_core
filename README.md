@@ -18,6 +18,18 @@ see doc, link TBU
 
 ![image-20210629090554335](README.assets/image-20210629090554335.png)
 
+## Monitoring FastAPI Applications
+
+High-Level Architecture :
+
+![image-20210629223818749](README.assets/image-20210629223818749.png)
+
+elasticsearch download & how to , see : https://www.elastic.co/downloads/elasticsearch
+
+APM Server download & how to , see: https://www.elastic.co/downloads/apm
+
+Kibana download & how to , see : https://www.elastic.co/downloads/kibana
+
 ## faursound CI
 
 TBU

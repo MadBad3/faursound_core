@@ -23,7 +23,6 @@ OUTPUT_PATH = r'./detections'   # path to output folder where images with detect
 
 apm_config = {
  'SERVICE_NAME': 'FaurSound API',
- 'SERVER_URL': 'http://localhost:8200',
 }
 apm = make_apm_client(apm_config)
 
