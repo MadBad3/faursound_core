@@ -11,9 +11,6 @@ azure-storage-blob
 fastapi
 uvicorn[standard]
 python-multipart
-opentelemetry-api
-opentelemetry-sdk
-opentelemetry-exporter-jaeger
-opentelemetry-instrumentation-fastapi
 snakeviz
 httpx
+elastic-apm

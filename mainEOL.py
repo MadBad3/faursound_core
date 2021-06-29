@@ -10,8 +10,7 @@ from inferenceEOL import inferenceEOL
 from fastapi import FastAPI, File, UploadFile
 import time
 from df2NVHExpert import df2NVHExpert
-from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
-
+from elasticapm.contrib.starlette import make_apm_client, ElasticAPM
 
 path2label_map_json = r'./label_map.json' 
 
@@ -22,12 +21,20 @@ inferenceAPI = inferenceEOL(path2label_map_json = path2label_map_json, model_pat
 
 OUTPUT_PATH = r'./detections'   # path to output folder where images with detections are saved
 
+apm_config = {
+ 'SERVICE_NAME': 'FaurSound API',
+ 'SERVER_URL': 'http://localhost:8200',
+}
+apm = make_apm_client(apm_config)
+
+
 app = FastAPI(
         title="FaurSound API",
         version=model_version,
         description=f"noise analysis AI for etilt EOL",
 )
-FastAPIInstrumentor.instrument_app(app)
+# FastAPIInstrumentor.instrument_app(app)
+app.add_middleware(ElasticAPM, client=apm)
 
 def update_log_file(log_file, infor:str):
     with open(log_file, "a") as f:
