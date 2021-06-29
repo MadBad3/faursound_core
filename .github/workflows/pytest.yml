@@ -13,7 +13,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout github repo (+ download lfs dependencies)
+    - name: Checkout github repo without lfs
       uses: actions/checkout@v2
       with:
         lfs: false
