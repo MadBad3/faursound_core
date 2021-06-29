@@ -7,3 +7,13 @@ README.md
 .git
 .Python
 *.png
+data/
+speed_profiling/
+flask_not_used/
+gcp_app_flex_engine/
+README.assets/
+detections/
+temp/
+log/
+json_output/
+
