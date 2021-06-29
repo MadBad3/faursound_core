@@ -11,5 +11,9 @@ WORKDIR /app
 
 EXPOSE 8000
 
-CMD ["gunicorn","-b",":8000","app:faursound_app()"]
+# CMD ["gunicorn","-b",":8000","app:faursound_app()"] # this is for flask
+
+# below CMD is for fastapi
+CMD ["uvicorn", "mainEOL:app", "--host", "0.0.0.0", "--port", "8000"]
+
 
