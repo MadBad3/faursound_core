@@ -1,6 +1,5 @@
 import requests
 import os
-import progressbar
 import time
 import json
 import logging
@@ -10,6 +9,8 @@ import pstats
 from requests.sessions import session
 import socket
 import requests.packages.urllib3.util.connection as urllib3_cn
+import httpx
+import asyncio
 
 # http.client.HTTPConnection.debuglevel = 1
 # logging.basicConfig()
@@ -54,22 +55,23 @@ def inference_wav_raw(file_path,  profiling_fp:str, url = URL):
     return (r.json(), (t2 - t1))
 
 
-def process_one_wav_folder(wav_folder, log_file_path, profiling_folder:str):
+async def process_one_wav_folder(wav_folder, log_file_path, profiling_folder:str):
     file_lists = os.listdir(wav_folder)
     print(f'processing {len(file_lists)} wav files..')
 
-    # widgets = ['request to API running : ', progressbar.AnimatedMarker(), progressbar.Percentage(), progressbar.Bar(), progressbar.ETA()] 
-    # bar = progressbar.ProgressBar(widgets=widgets, maxval=len(file_lists)).start()
 
-    for count, file_name in enumerate(file_lists):
+    def one_task(count, file_name, wav_folder=wav_folder,log_file_path=log_file_path,profiling_folder=profiling_folder):
         file_path = os.path.join(wav_folder, file_name)
         profiling_fp = os.path.join(profiling_folder, f'{count}.prof')
         response, time_spend = inference_wav_raw(file_path, profiling_fp)
-        # bar.update(count)
         print(response)
         print(f'time spend = {time_spend}')
         update_log_file(log_file_path, str(round(time_spend,3)))
 
+    async with httpx.AsyncClient() as client:
+        tasks = (one_task(count, file_name) for count, file_name in enumerate(file_lists))
+        reqs = await asyncio.gather(*tasks)
+        
 
 def update_log_file(log_file, infor:str):
     with open(log_file, "a") as f:
@@ -100,6 +102,6 @@ if __name__ == "__main__":
     if not os.path.isdir(profiling_folder):
         os.mkdir(profiling_folder)
     for folder in all_sub_folders:
-        process_one_wav_folder(wav_folder = folder, log_file_path = log_file, profiling_folder = profiling_folder)
+        asyncio.run(process_one_wav_folder(wav_folder = folder, log_file_path = log_file, profiling_folder = profiling_folder))
 
 
