@@ -55,7 +55,7 @@ def inference_wav_raw(file_path,  profiling_fp:str, url = URL):
     return (r.json(), (t2 - t1))
 
 
-async def process_one_wav_folder(wav_folder, log_file_path, profiling_folder:str):
+def process_one_wav_folder(wav_folder, log_file_path, profiling_folder:str):
     file_lists = os.listdir(wav_folder)
     print(f'processing {len(file_lists)} wav files..')
 
@@ -68,9 +68,11 @@ async def process_one_wav_folder(wav_folder, log_file_path, profiling_folder:str
         print(f'time spend = {time_spend}')
         update_log_file(log_file_path, str(round(time_spend,3)))
 
-    async with httpx.AsyncClient() as client:
-        tasks = (one_task(count, file_name) for count, file_name in enumerate(file_lists))
-        reqs = await asyncio.gather(*tasks)
+    for count, file_name in enumerate(file_lists):
+        one_task(count, file_name)
+    # async with httpx.AsyncClient() as client:
+    #     tasks = (one_task(count, file_name) for count, file_name in enumerate(file_lists))
+    #     reqs = await asyncio.gather(*tasks)
         
 
 def update_log_file(log_file, infor:str):
@@ -102,6 +104,6 @@ if __name__ == "__main__":
     if not os.path.isdir(profiling_folder):
         os.mkdir(profiling_folder)
     for folder in all_sub_folders:
-        asyncio.run(process_one_wav_folder(wav_folder = folder, log_file_path = log_file, profiling_folder = profiling_folder))
+        process_one_wav_folder(wav_folder = folder, log_file_path = log_file, profiling_folder = profiling_folder)
 
 
