@@ -105,6 +105,7 @@ class fsAzureStorage(object):
         self._update_date()
 
         xml_file_list = glob.glob(folder_to_upload + '\*.xml')
+	print(f'{len(xml_file_list)} files to upload')
 
         for xml_fp in xml_file_list:
             direction = get_direction_from_fn(os.path.basename(xml_fp))
