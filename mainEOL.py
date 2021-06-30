@@ -40,8 +40,8 @@ def update_log_file(log_file, infor:str):
         f.write(infor) 
         f.write("\n")
 
-@app.post("/EOL/")
-async def inference_with_EOL_output(wav: UploadFile = File(...)):
+@app.post('/EOL')
+def inference_with_EOL_output(wav: UploadFile = File(...)):
 
     t1 = time.time()
     wav_name = wav.filename #! we use input from EOL to create filename when link with labview
@@ -104,13 +104,13 @@ async def inference_with_EOL_output(wav: UploadFile = File(...)):
     return json_str
 
 
-@app.get('/hello/')
+@app.get('/hello')
 async def hello():
     faursound_api_github = r'https://github.com/WangCHEN9/faursound_core'
     response = f'Hello, see how to use this API in {faursound_api_github} !'
     return response
 
 
-@app.post("/test/")
+@app.post('/test')
 async def test_upload_wav(wav: UploadFile = File(...)):
     return {"filename": wav.filename}
