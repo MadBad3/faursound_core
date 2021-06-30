@@ -9,6 +9,8 @@
 > conda activate fs
 
 > pip install -r requirements.txt
+note : if issue when installing elastic-apm -> download source file, then install manually with
+> python setup.py install
 
 ## faursound core functions
 
