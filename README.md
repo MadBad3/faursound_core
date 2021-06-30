@@ -1,4 +1,4 @@
-# faursound-core
+# faursound_core
 [![pytest](https://github.com/GVSCAL/faursound_core/actions/workflows/pytest.yml/badge.svg)](https://github.com/GVSCAL/faursound_core/actions/workflows/pytest.yml)
 [![CodeQL](https://github.com/GVSCAL/faursound_core/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/GVSCAL/faursound_core/actions/workflows/codeql-analysis.yml)
 [![Docker Image CI](https://github.com/GVSCAL/faursound_core/actions/workflows/docker-image-with-test.yml/badge.svg)](https://github.com/GVSCAL/faursound_core/actions/workflows/docker-image-with-test.yml)
@@ -13,15 +13,17 @@
 note : if issue when installing elastic-apm -> download source file, then install manually with
 > python setup.py install
 
-## faursound core functions
+## FaurSound core functions
 
 see doc, link TBU
 
-## faursound REST API
+## FaurSound REST API
 
 ![image-20210629090554335](README.assets/image-20210629090554335.png)
 
-## Monitoring FastAPI Applications
+## Monitoring API performance
+
+**Note before start : this set up need 17G+ free RAM in your computer !**
 
 High-Level Architecture :
 
