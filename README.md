@@ -28,8 +28,7 @@ host API server with :
 ```python
 uvicorn mainEOL:app
 ```
-
-
+check API docs in: http://localhost:8000/docs
 
 ![image-20210629090554335](README.assets/image-20210629090554335.png)
 
