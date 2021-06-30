@@ -38,5 +38,8 @@ APM Server download & how to , see: https://www.elastic.co/downloads/apm
 
 Kibana download & how to , see : https://www.elastic.co/downloads/kibana
 
+the dashboard will looks like :
+![monitoring](README.assets/monitoring.png)
+
 ## faursound CI
 TBU
