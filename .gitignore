@@ -21,6 +21,8 @@ log/
 json_output/
 speed_profiling/
 Monitoring/
+fs-dependencies/
+fs-dependencies.tar.gz
 
 # Distribution / packaging
 .Python

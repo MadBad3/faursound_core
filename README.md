@@ -22,6 +22,15 @@ python setup.py install
 see doc, link TBU
 
 ## FaurSound REST API
+
+host API server with :
+
+```python
+uvicorn mainEOL:app
+```
+
+
+
 ![image-20210629090554335](README.assets/image-20210629090554335.png)
 
 ## Monitoring API performance
@@ -43,3 +52,26 @@ the dashboard will looks like :
 
 ## faursound CI
 TBU
+
+
+
+## Deploy in no internet environment
+
+from computer with internet , run below preparation :
+
+```python
+mkdir dependencies
+pip download -r requirements.txt -d "./dependencies"
+tar cvfz dependencies.tar.gz dependencies
+```
+
+
+
+then go to computer without internet, copy both  dependencies.tar.gz & requirements.txt:
+
+```python
+tar zxvf dependencies.tar.gz
+
+pip install --no-index --find-links=dependencies/ -r requirements.txt
+```
+
