@@ -105,7 +105,7 @@ class fsAzureStorage(object):
         self._update_date()
 
         xml_file_list = glob.glob(folder_to_upload + '\*.xml')
-	    print(f'{len(xml_file_list)} files to upload')
+        print(f'there are {len(xml_file_list)} files to upload')
 
         for xml_fp in xml_file_list:
             direction = get_direction_from_fn(os.path.basename(xml_fp))
@@ -181,8 +181,8 @@ if __name__ == '__main__':
     sub_folder = r'v1-5-0'
     local_folder = os.path.join(training_sample_dict,sub_folder)
 
-    # azureClient.pull_training_sample(local_folder = local_folder)
-    azureClient.commit_training_sample(folder_to_upload = local_folder)
+    azureClient.pull_training_sample(local_folder = local_folder)
+    # azureClient.commit_training_sample(folder_to_upload = local_folder)
 
 
 
