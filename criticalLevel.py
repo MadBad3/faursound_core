@@ -54,31 +54,6 @@ class criticalLevel(object):
         return df
 
 
-    def _get_cut_center_position(self,stft_pic_path:str, x1:float,y1:float,x2:float,y2:float):
-        img = cv.imread(stft_pic_path)
-        y_height, x_width = img.shape
-
-        center_position = ((x2-x1)/x_width,(y2-y1)/y_height)
-        return center_position
-
-
-    def _check_detection_position(self, stft_pic_path:str, x1:float,y1:float,x2:float,y2:float, label:str):
-        center_position_x, center_position_y = self._get_cut_center_position(stft_pic_path,
-                                                                            x1=x1,y1=y1,x2=x2,y2=y2)
-        pass
-
-
-    def _check_blocking_position(self, center_position_x, center_position_y):
-        blocking_position_range = {
-            'center_x_min': 0.0,
-            'center_y_min': 0.01,
-            'center_x_max': 1.0,
-            'center_y_max': 0.99,
-        }
-        pass
-
-
-
     def _calculate_critical_level(self, label:str, score:float, cutted_img:np.ndarray):
 
         if label == 'blocking':
