@@ -23,7 +23,8 @@ see doc, link TBU
 
 ## FaurSound REST API
 
-> minimum RAM required for host faursound API is 8G. Ideally with 16G RAM.
+> minimum RAM required for host faursound API is **8G**. Ideally with 16G RAM.
+
 host API server with :
 
 ```python
