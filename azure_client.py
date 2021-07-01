@@ -184,5 +184,9 @@ if __name__ == '__main__':
     azureClient.pull_training_sample(local_folder = local_folder)
     # azureClient.commit_training_sample(folder_to_upload = local_folder)
 
+    # below is running split train and test sample
+    os.system(f'python partition_dataset.py -i {local_folder} -r 0.1 -o {training_sample_dict} -x')
+
+
 
 
