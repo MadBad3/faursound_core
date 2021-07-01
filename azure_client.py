@@ -101,7 +101,10 @@ class fsAzureStorage(object):
         def get_direction_from_fn(file_name):
             #? do we need this to get direction automaticly?
             direction_ = re.search('Up|Down', file_name)
-            return direction_.group()
+            if direction_:
+                return direction_.group()
+            else :
+                return ""
 
         self._update_date()
 
@@ -193,14 +196,14 @@ if __name__ == '__main__':
     azureClient = fsAzureStorage(model_version = '1-3-0', for_training_sample = True)
 
     training_sample_dict = r'D:\Github\FaurSound\Tensorflow\workspace\images'
-    sub_folder = r'v1-5-0'
+    sub_folder = r'v1-5-1'
     local_folder = os.path.join(training_sample_dict,sub_folder)
-    azureClient.pull_training_sample_based_on_label(training_sample_dict, labels=['buzzing'])
-    # azureClient.commit_training_sample(folder_to_upload = local_folder)
-    # azureClient.pull_training_sample(local_folder = local_folder)
+    # azureClient.pull_training_sample_based_on_label(training_sample_dict, labels=['buzzing'])
+    # azureClient.commit_training_sample(folder_to_upload = r'D:\Github\FaurSound\Tensorflow\workspace\images\buzzing')
+    azureClient.pull_training_sample(local_folder = local_folder)
 
     #* below is running split train and test sample
-    # os.system(f'python partition_dataset.py -i {local_folder} -r 0.1 -o {training_sample_dict} -x')
+    os.system(f'python partition_dataset.py -i {local_folder} -r 0.1 -o {training_sample_dict} -x')
 
 
 
