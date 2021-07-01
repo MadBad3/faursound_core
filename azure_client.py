@@ -7,6 +7,7 @@ import glob
 import xml.etree.ElementTree as ET
 from etiltEOL import etiltEOL
 import sys
+from typing import List
 
 class fsAzureStorage(object):
 
@@ -19,7 +20,7 @@ class fsAzureStorage(object):
             cfg.read(r'./secret/config.ini')
             if self.for_training_sample:
                 AZURE_KEY = cfg['DEFAULT']['AZURE_KEY_TRAINING']
-                self.cv_pic_container = f'etilt-cv-training'
+                self.training_data_container = f'etilt-cv-training'
 
             else : 
                 AZURE_KEY = cfg['DEFAULT']['AZURE_KEY_PREDICTION']
@@ -117,8 +118,8 @@ class fsAzureStorage(object):
             'labels': ','.join(labels) ,
             }
             cv_pic_fp = self._get_image_fp_based_on_xml_fp(xml_fp)
-            self._upload_file(container_name = self.cv_pic_container, file_path = cv_pic_fp, metadata = metadata)
-            self._upload_file(container_name = self.cv_pic_container, file_path = xml_fp, metadata = metadata)
+            self._upload_file(container_name = self.training_data_container, file_path = cv_pic_fp, metadata = metadata)
+            self._upload_file(container_name = self.training_data_container, file_path = xml_fp, metadata = metadata)
             print(f'uploading files for {xml_fp} -> Done')
         print(f'commit training samples to Azure blob storage -> Done ')
 
@@ -126,7 +127,7 @@ class fsAzureStorage(object):
     def pull_training_sample(self, local_folder):
         if not os.path.isdir(local_folder):
             os.mkdir(local_folder)
-        container_client = self.blob_service_client.get_container_client(self.cv_pic_container)
+        container_client = self.blob_service_client.get_container_client(self.training_data_container)
         blob_list = container_client.list_blobs()
         for blob in blob_list:
             blob_client = container_client.get_blob_client(blob)
@@ -137,13 +138,27 @@ class fsAzureStorage(object):
                 download_file.write(blob_client.download_blob().readall())
 
 
-    def list_blobs_in_container(self, container_name):
-        #TODO , to think about the use of this function
-        container_client = self.blob_service_client.get_container_client(container_name)
-        print('f')
-        blob_list = container_client.list_blobs()
+    def pull_training_sample_based_on_label(self, local_folder, labels:List):
+        for label in labels:
+            sub_folder = os.path.join(local_folder, label)
+            if not os.path.isdir(sub_folder):
+                os.mkdir(sub_folder)
+
+        container_client = self.blob_service_client.get_container_client(self.training_data_container)
+        blob_list = container_client.list_blobs(include='metadata')
         for blob in blob_list:
-            print(blob.name)
+            metadata_labels = blob.metadata['labels']
+            if metadata_labels:         # avoid if metadata_labels is empty
+                blob_labels = metadata_labels.split(",")
+                for blob_label in blob_labels:
+                    if blob_label in labels:
+                        blob_client = container_client.get_blob_client(blob)
+                        download_file_path = os.path.join(local_folder, blob_label, blob.name)
+                        print("\nDownloading blob to \n\t" + download_file_path)
+
+                        with open(download_file_path, "wb") as download_file:
+                            download_file.write(blob_client.download_blob().readall())
+        print(f'pulling training sample based on label --> done')
 
 
     def update_blob_meta(self, container_name, blob_name, meta):
@@ -180,12 +195,12 @@ if __name__ == '__main__':
     training_sample_dict = r'D:\Github\FaurSound\Tensorflow\workspace\images'
     sub_folder = r'v1-5-0'
     local_folder = os.path.join(training_sample_dict,sub_folder)
-
-    azureClient.pull_training_sample(local_folder = local_folder)
+    azureClient.pull_training_sample_based_on_label(training_sample_dict, labels=['buzzing'])
     # azureClient.commit_training_sample(folder_to_upload = local_folder)
+    # azureClient.pull_training_sample(local_folder = local_folder)
 
-    # below is running split train and test sample
-    os.system(f'python partition_dataset.py -i {local_folder} -r 0.1 -o {training_sample_dict} -x')
+    #* below is running split train and test sample
+    # os.system(f'python partition_dataset.py -i {local_folder} -r 0.1 -o {training_sample_dict} -x')
 
 
 
