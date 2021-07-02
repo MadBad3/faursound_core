@@ -198,12 +198,12 @@ if __name__ == '__main__':
     training_sample_dict = r'D:\Github\FaurSound\Tensorflow\workspace\images'
     sub_folder = r'v1-5-1'
     local_folder = os.path.join(training_sample_dict,sub_folder)
-    azureClient.pull_training_sample_based_on_label(training_sample_dict, labels=['scratching'])
-    # azureClient.commit_training_sample(folder_to_upload = r'D:\Github\FaurSound\Tensorflow\workspace\images\buzzing')
-    # azureClient.pull_training_sample(local_folder = local_folder)
+    # azureClient.pull_training_sample_based_on_label(training_sample_dict, labels=['scratching'])
+    # azureClient.commit_training_sample(folder_to_upload = r'D:\Github\FaurSound\Tensorflow\workspace\images\scratching')
+    azureClient.pull_training_sample(local_folder = local_folder)
 
     #* below is running split train and test sample
-    # os.system(f'python partition_dataset.py -i {local_folder} -r 0.1 -o {training_sample_dict} -x')
+    os.system(f'python partition_dataset.py -i {local_folder} -r 0.1 -o {training_sample_dict} -x')
 
 
 
