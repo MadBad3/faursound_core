@@ -16,6 +16,8 @@ class fsAzureStorage(object):
         cfg = ConfigParser()
         self.for_training_sample = for_training_sample
         self.date = datetime.utcnow().strftime('%d%m%Y')
+        self.model_version = model_version
+
         if not testing:
             cfg.read(os.path.join(os.path.dirname(__file__), 'secret','config.ini'))
             if self.for_training_sample:
@@ -24,7 +26,6 @@ class fsAzureStorage(object):
 
             else : 
                 AZURE_KEY = cfg['DEFAULT']['AZURE_KEY_PREDICTION']
-                self.model_version = model_version
                 self.predict_pic_container = f'{self.date}-predicts-{self.model_version}'
                 self.txt_container = f'{self.date}-txt-{self.model_version}'
                 self.cv_pic_container = f'{self.date}-cvpic'
@@ -127,7 +128,7 @@ class fsAzureStorage(object):
         print(f'commit training samples to Azure blob storage -> Done ')
 
 
-    def pull_training_sample(self, local_folder):
+    def pull_all_training_sample(self, local_folder, train_test_split=False, test_ratio:float = 0.1):
         if not os.path.isdir(local_folder):
             os.mkdir(local_folder)
         container_client = self.blob_service_client.get_container_client(self.training_data_container)
@@ -139,6 +140,8 @@ class fsAzureStorage(object):
 
             with open(download_file_path, "wb") as download_file:
                 download_file.write(blob_client.download_blob().readall())
+        if train_test_split:
+            os.system(f'python partition_dataset.py -i {local_folder} -r {test_ratio} -o {training_sample_dict} -x')
 
 
     def pull_training_sample_based_on_label(self, local_folder, labels:List):
@@ -193,17 +196,15 @@ class fsAzureStorage(object):
 
 if __name__ == '__main__':
 
-    azureClient = fsAzureStorage(model_version = '1-3-0', for_training_sample = True)
+    azureClient = fsAzureStorage(model_version = '1-5-1', for_training_sample = True)
 
     training_sample_dict = r'D:\Github\FaurSound\Tensorflow\workspace\images'
-    sub_folder = r'v1-5-1'
-    local_folder = os.path.join(training_sample_dict,sub_folder)
-    # azureClient.pull_training_sample_based_on_label(training_sample_dict, labels=['scratching'])
+    local_folder = os.path.join(training_sample_dict,azureClient.model_version)
+    azureClient.pull_training_sample_based_on_label(training_sample_dict, labels=['bench'])
     # azureClient.commit_training_sample(folder_to_upload = r'D:\Github\FaurSound\Tensorflow\workspace\images\scratching')
-    # azureClient.pull_training_sample(local_folder = local_folder)
+    # azureClient.pull_all_training_sample(local_folder = local_folder, train_test_split=True)
 
-    #* below is running split train and test sample
-    os.system(f'python partition_dataset.py -i {local_folder} -r 0.1 -o {training_sample_dict} -x')
+
 
 
 
