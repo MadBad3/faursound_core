@@ -14,6 +14,7 @@ optional arguments:
 """
 import os
 import re
+import shutil
 from shutil import copyfile
 import argparse
 import math
@@ -28,7 +29,15 @@ def iterate_dir(source, dest, ratio, copy_xml):
 
     if not os.path.exists(train_dir):
         os.makedirs(train_dir)
+    else :
+        shutil.rmtree(train_dir)  #! remove all if existing then recreat
+        print(f'removing existing {train_dir}..')
+        os.makedirs(train_dir)
     if not os.path.exists(test_dir):
+        os.makedirs(test_dir)
+    else :
+        shutil.rmtree(test_dir)  #! remove all if existing then recreat
+        print(f'removing existing {test_dir}..')
         os.makedirs(test_dir)
 
     images = [f for f in os.listdir(source)
