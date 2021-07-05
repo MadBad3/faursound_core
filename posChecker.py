@@ -7,17 +7,16 @@ import cv2 as cv
 class posChecker(object):
     def __init__(self, stft_pic_path:str) -> None:
         img = cv.imread(stft_pic_path)
-        self.y_height, self.x_width = img.shape
+        self.y_height = img.shape[0]
+        self.x_width = img.shape[1]
 
 
-    def _get_cut_covered_position(self, x1:float, y1:float, x2:float, y2:float) -> None:
+    def _get_cut_covered_position(self, x1:float, y1:float, x2:float, y2:float) -> tuple:
         covered_position = ((x2-x1)/self.x_width,(y2-y1)/self.y_height)
-        #self.covered_position_x = covered_position[0]
-        #self.covered_position_y = covered_position[1]
         return covered_position
 
 
-    def _check_condition_position(self, position_range:dict, covered_position_x:float, covered_position_y:float) -> bool:
+    def _check_condition_position(self, position_range:dict, covered_position_x:float, covered_position_y:float, y1:float, y2:float) -> bool:
         if((covered_position_x >= position_range.get('covered_x_min') and covered_position_x <= position_range.get('covered_x_max')) and 
             (covered_position_y >= position_range.get('covered_y_min') and covered_position_y <= position_range.get('covered_y_max')) and 
             (y1 > position_range.get('y_height_up_limit') and y2 < position_range.get('y_height_bottom_limit'))) :
@@ -26,7 +25,7 @@ class posChecker(object):
             return False
 
 
-    def _check_detection_position(self, x1:float, y1:float, x2:float, y2:float, label:str):
+    def _check_detection_position(self, x1:float, y1:float, x2:float, y2:float, label:str) -> str:
         covered_position_x, covered_position_y = self._get_cut_covered_position(x1=x1,y1=y1,x2=x2,y2=y2)
 
         if label == 'blocking':
@@ -57,7 +56,7 @@ class posChecker(object):
             output = self._check_pos_scratching(covered_position_x, covered_position_y, x1, y1, x2, y2)
             
         elif label == 'spike':
-            output = self._check_pos_spike(covered_position_x, covered_position_y, score=score, x1, y1, x2, y2)
+            output = self._check_pos_spike(covered_position_x, covered_position_y, x1, y1, x2, y2)
             
         elif label == 'bench':
             output = self._check_pos_bench(covered_position_x, covered_position_y, x1, y1, x2, y2)
@@ -90,7 +89,7 @@ class posChecker(object):
             'y_height_bottom_limit': self.y_height*0.85
         }
         
-        if(self._check_condition_position(blocking_position_range, covered_position_x, covered_position_y)) :
+        if(self._check_condition_position(blocking_position_range, covered_position_x, covered_position_y, y1, y2)) :
             return 'pos_OK'
         else:
             return 'pos_NOK'
@@ -106,7 +105,7 @@ class posChecker(object):
             'y_height_bottom_limit': self.y_height*0.85
         }
 
-        if(self._check_condition_position(pain_position_range, covered_position_x, covered_position_y)) :
+        if(self._check_condition_position(pain_position_range, covered_position_x, covered_position_y, y1, y2)) :
             return 'pos_OK'
         else:
             return 'pos_NOK'
@@ -114,15 +113,15 @@ class posChecker(object):
 
     def _check_pos_hooting(self, covered_position_x:float, covered_position_y:float, x1:float,y1:float,x2:float,y2:float) -> str:
         hooting_position_range = {
-            'covered_x_min': 0.67,
-            'covered_y_min': 0.012,
+            'covered_x_min': 0.5,
+            'covered_y_min': 0.01,
             'covered_x_max': 1.0,
-            'covered_y_max': 0.04,
+            'covered_y_max': 0.06,
             'y_height_up_limit': self.y_height*0.5,
             'y_height_bottom_limit': self.y_height*0.85
         }
 
-        if(self._check_condition_position(hooting_position_range, covered_position_x, covered_position_y)) :
+        if(self._check_condition_position(hooting_position_range, covered_position_x, covered_position_y, y1, y2)) :
             return 'pos_OK'
         else:
             return 'pos_NOK'
@@ -138,7 +137,7 @@ class posChecker(object):
             'y_height_bottom_limit': self.y_height*0.85
         }
 
-        if(self._check_condition_position(modulation_position_range, covered_position_x, covered_position_y)) :
+        if(self._check_condition_position(modulation_position_range, covered_position_x, covered_position_y, y1, y2)) :
             return 'pos_OK'
         else:
             return 'pos_NOK'
@@ -154,7 +153,7 @@ class posChecker(object):
             'y_height_bottom_limit': self.y_height*0.85
         }
 
-        if(self._check_condition_position(grinding_position_range, covered_position_x, covered_position_y)) :
+        if(self._check_condition_position(grinding_position_range, covered_position_x, covered_position_y, y1, y2)) :
             return 'pos_OK'
         else:
             return 'pos_NOK'
@@ -162,15 +161,15 @@ class posChecker(object):
 
     def _check_pos_over_running(self, covered_position_x:float, covered_position_y:float, x1:float,y1:float,x2:float,y2:float) -> str:
         over_running_position_range = {
-            'covered_x_min': 0.2,
+            'covered_x_min': 0.05,
             'covered_y_min': 0.065,
             'covered_x_max': 1.0,
-            'covered_y_max': 0.22,
+            'covered_y_max': 0.7,
             'y_height_up_limit': self.y_height*0.19,
             'y_height_bottom_limit': self.y_height*0.65
         }
 
-        if(self._check_condition_position(over_running_position_range, covered_position_x, covered_position_y)) :
+        if(self._check_condition_position(over_running_position_range, covered_position_x, covered_position_y, y1, y2)) :
             return 'pos_OK'
         else:
             return 'pos_NOK'
@@ -186,7 +185,7 @@ class posChecker(object):
             'y_height_bottom_limit': self.y_height*0.65
         }
 
-        if(self._check_condition_position(tic_position_range, covered_position_x, covered_position_y)) :
+        if(self._check_condition_position(tic_position_range, covered_position_x, covered_position_y, y1, y2)) :
             return 'pos_OK'
         else:
             return 'pos_NOK'
@@ -202,7 +201,7 @@ class posChecker(object):
             'y_height_bottom_limit': self.y_height*0.94
         }
 
-        if(self._check_condition_position(knock_position_range, covered_position_x, covered_position_y)) :
+        if(self._check_condition_position(knock_position_range, covered_position_x, covered_position_y, y1, y2)) :
             return 'pos_OK'
         else:
             return 'pos_NOK'
@@ -218,7 +217,7 @@ class posChecker(object):
             'y_height_bottom_limit': self.y_height*0.2
         }
 
-        if(self._check_condition_position(scratching_position_range, covered_position_x, covered_position_y)) :
+        if(self._check_condition_position(scratching_position_range, covered_position_x, covered_position_y, y1, y2)) :
             return 'pos_OK'
         else:
             return 'pos_NOK'
@@ -234,7 +233,7 @@ class posChecker(object):
             'y_height_bottom_limit': self.y_height*1.0
         }
 
-        if(self._check_condition_position(spike_position_range, covered_position_x, covered_position_y)) :
+        if(self._check_condition_position(spike_position_range, covered_position_x, covered_position_y, y1, y2)) :
             return 'pos_OK'
         else:
             return 'pos_NOK'
@@ -242,15 +241,15 @@ class posChecker(object):
     
     def _check_pos_bench(self, covered_position_x:float, covered_position_y:float, x1:float,y1:float,x2:float,y2:float) -> str:
         bench_position_range = {
-            'covered_x_min': 0.045,
-            'covered_y_min': 0.03,
+            'covered_x_min': 0.03,
+            'covered_y_min': 0.01,
             'covered_x_max': 0.13,
             'covered_y_max': 0.07,
             'y_height_up_limit': self.y_height*0.9,
             'y_height_bottom_limit': self.y_height*1.0
         }
 
-        if(self._check_condition_position(bench_position_range, covered_position_x, covered_position_y)) :
+        if(self._check_condition_position(bench_position_range, covered_position_x, covered_position_y, y1, y2)) :
             return 'pos_OK'
         else:
             return 'pos_NOK'
@@ -266,7 +265,7 @@ class posChecker(object):
             'y_height_bottom_limit': self.y_height*1.0
         }
 
-        if(self._check_condition_position(measurement_issue_position_range, covered_position_x, covered_position_y)) :
+        if(self._check_condition_position(measurement_issue_position_range, covered_position_x, covered_position_y, y1, y2)) :
             return 'pos_OK'
         else:
             return 'pos_NOK'
@@ -282,7 +281,7 @@ class posChecker(object):
             'y_height_bottom_limit': self.y_height*1.0
         }
 
-        if(self._check_condition_position(rattle_product_position_range, covered_position_x, covered_position_y)) :
+        if(self._check_condition_position(rattle_product_position_range, covered_position_x, covered_position_y, y1, y2)) :
             return 'pos_OK'
         else:
             return 'pos_NOK'
@@ -298,7 +297,7 @@ class posChecker(object):
             'y_height_bottom_limit': self.y_height*0.4
         }
 
-        if(self._check_condition_position(buzzing_product_position_range, covered_position_x, covered_position_y)) :
+        if(self._check_condition_position(buzzing_product_position_range, covered_position_x, covered_position_y, y1, y2)) :
             return 'pos_OK'
         else:
             return 'pos_NOK'
@@ -314,7 +313,7 @@ class posChecker(object):
             'y_height_bottom_limit': self.y_height*0.0
         }
 
-        if(self._check_condition_position(vibration_machine_position_range, covered_position_x, covered_position_y)) :
+        if(self._check_condition_position(vibration_machine_product_position_range, covered_position_x, covered_position_y, y1, y2)) :
             return 'pos_OK'
         else:
             return 'pos_NOK'
