@@ -92,5 +92,5 @@ def count_xml_and_prepare_tfrecord(model_version:str, creat_tfrecord=False):
 if __name__ == '__main__':
     # path to annotation folder
     os.chdir(r'D:\Github\FaurSound')
-    count_xml_and_prepare_tfrecord(model_version = "v1-5-1", creat_tfrecord= True)
+    count_xml_and_prepare_tfrecord(model_version = "v1-5-2", creat_tfrecord= True)
 

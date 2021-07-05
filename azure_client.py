@@ -8,6 +8,7 @@ import xml.etree.ElementTree as ET
 from etiltEOL import etiltEOL
 import sys
 from typing import List
+from xmlCounter import count_xml_and_prepare_tfrecord
 
 class fsAzureStorage(object):
 
@@ -141,7 +142,8 @@ class fsAzureStorage(object):
             with open(download_file_path, "wb") as download_file:
                 download_file.write(blob_client.download_blob().readall())
         if train_test_split:
-            os.system(f'python partition_dataset.py -i {local_folder} -r {test_ratio} -o {training_sample_dict} -x')
+            partition_dataset_script_path = os.path.join(os.path.dirname(__file__),'partition_dataset.py')
+            os.system(f'python {partition_dataset_script_path} -i {local_folder} -r {test_ratio} -o {training_sample_dict} -x')
 
 
     def pull_training_sample_based_on_label(self, local_folder, labels:List):
@@ -195,14 +197,17 @@ class fsAzureStorage(object):
 
 
 if __name__ == '__main__':
+    os.chdir(r'D:\Github\FaurSound')
 
-    azureClient = fsAzureStorage(model_version = '1-5-1', for_training_sample = True)
+    azureClient = fsAzureStorage(model_version = '1-5-3', for_training_sample = True)
 
     training_sample_dict = r'D:\Github\FaurSound\Tensorflow\workspace\images'
     local_folder = os.path.join(training_sample_dict,azureClient.model_version)
-    azureClient.pull_training_sample_based_on_label(training_sample_dict, labels=['bench'])
-    # azureClient.commit_training_sample(folder_to_upload = r'D:\Github\FaurSound\Tensorflow\workspace\images\scratching')
-    # azureClient.pull_all_training_sample(local_folder = local_folder, train_test_split=True)
+    # azureClient.pull_training_sample_based_on_label(training_sample_dict, labels=['rattle_product'])
+    # azureClient.commit_training_sample(folder_to_upload = r'D:\Github\FaurSound\Tensorflow\workspace\images\bench')
+    azureClient.pull_all_training_sample(local_folder = local_folder, train_test_split=True)
+    count_xml_and_prepare_tfrecord(model_version = azureClient.model_version, creat_tfrecord= True)
+
 
 
 
